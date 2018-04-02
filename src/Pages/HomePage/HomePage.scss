@@ -1,0 +1,21 @@
+/*
+* Author: @nayunhwan (github.com/nayunhwan)
+* Email: nayunhwan.dev@mgail.com
+*/
+.homePage {
+  &__content {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+
+    &__make {
+      color: $main-color !important;
+
+      &:hover {
+        background-color: $main-color !important;
+        color: white !important;
+      }
+    }
+  }
+}

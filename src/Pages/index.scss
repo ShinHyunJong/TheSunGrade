@@ -4,4 +4,12 @@
 */
 
 // Default Page Scss
+@import "./ActionPage/ActionPage";
 @import "./_DefaultPage/DefaultPage";
+@import "./HomePage/HomePage";
+@import "./CategoryPage/CategoryPage";
+@import "./LabelPage/LabelPage";
+@import "./LevelPage/LevelPage";
+@import "./TestPage/TestPage";
+@import "./BigLabelPage/BigLabelPage";
+@import "./TestCreatePage/TestCreatePage";

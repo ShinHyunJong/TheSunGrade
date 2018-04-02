@@ -1,0 +1,50 @@
+/*
+* Author: @nayunhwan (github.com/nayunhwan)
+* Email: nayunhwan.dev@mgail.com
+*/
+.testPage {
+  &__dialog {
+    display: flex;
+
+    &__title {
+      color: $main-color;
+      font-size: 20px;
+      margin-top: 1rem;
+      margin-left: 70px;
+    }
+
+    &__section {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      &__title {
+        color: $main-color;
+        font-size: 20px;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        padding-right: 20px;
+      }
+    }
+  }
+
+  &__content {
+    display: flex;
+    justify-content: center;
+
+    &__section {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      &__title {
+        color: $main-color;
+        font-size: 20px;
+        margin-top: 2rem;
+
+        margin-bottom: 1rem;
+        padding-right: 20px;
+      }
+    }
+  }
+}

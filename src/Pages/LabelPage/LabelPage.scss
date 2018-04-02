@@ -1,0 +1,23 @@
+/*
+* Author: @nayunhwan (github.com/nayunhwan)
+* Email: nayunhwan.dev@mgail.com
+*/
+.labelPage {
+  &__content {
+    padding: 60px;
+
+    &__section {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: column;
+
+      &__title {
+        color: $main-color;
+        font-size: 24px;
+        margin-bottom: 3rem;
+        padding-right: 20px;
+      }
+    }
+  }
+}

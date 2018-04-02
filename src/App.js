@@ -3,9 +3,28 @@ import React, { Component } from "react";
 // React Router
 import { BrowserRouter as Router, Route, Link } from "react-router-dom"; // Material UI Provider for React
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+import { green600 } from "material-ui/styles/colors";
 // Own Modules
-import { DefaultPage, DefaultReduxPage } from "./Pages/";
+import {
+  DefaultPage,
+  DefaultReduxPage,
+  HomePage,
+  CategoryPage,
+  LabelPage,
+  BigLabelPage,
+  TestPage,
+  ActionPage,
+  LevelPage,
+  TestCreatePage
+} from "./Pages/";
+
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: green600
+  },
+  radioButton: {}
+});
 
 class App extends Component {
   constructor(props) {
@@ -14,10 +33,15 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <Router>
           <div>
-            <Route exact path="/" component={DefaultPage} />
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/category" component={CategoryPage} />
+            <Route path="/category/action" component={ActionPage} />
+            <Route path="/category/level" component={LevelPage} />
+            <Route exact path="/test" component={TestPage} />
+            <Route path="/test/create" component={TestCreatePage} />
           </div>
         </Router>
       </MuiThemeProvider>

@@ -1,0 +1,38 @@
+/*
+* Author: @nayunhwan (github.com/nayunhwan)
+* Email: nayunhwan.dev@mgail.com
+*/
+.testCreatePage {
+  &__content {
+    padding-bottom: 1rem;
+
+    &__title {
+      margin-top: 1rem;
+      margin-left: 9px;
+
+      &__text {
+        font-size: 20px;
+        color: $main-color;
+
+        &__isPosted {
+          font-size: 20px;
+          color: #e25f70;
+        }
+      }
+    }
+
+    &__label {
+      margin-left: 10px;
+
+      &__text {
+        margin-right: 9.8rem;
+        font-weight: 700;
+        color: $gray-color;
+      }
+    }
+
+    &__input {
+      margin-top: 1rem;
+    }
+  }
+}

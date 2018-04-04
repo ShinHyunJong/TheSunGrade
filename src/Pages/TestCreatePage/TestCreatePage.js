@@ -3,6 +3,7 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Prompt } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { NavBar, List } from "../../Components";
 import Dialog from "material-ui/Dialog";
@@ -129,14 +130,18 @@ class TestCreatePage extends Component {
   handleProblem = index => {
     const { semester } = this.props.location.params;
     const problem_num = index + 1;
+    const big = semester.big[this.state.value[index]].name;
+    const big_index = this.state.value[index];
     const small =
       semester.big[this.state.value[index]].small[this.state.smallValue[index]];
+    const small_index = this.state.smallValue[index];
     const activity = this.props.activity[this.state.activity[index]].name;
     const level = this.props.level[this.state.level[index]].name;
     const exam_id = this.props.test;
     const content = this.state.content[index];
     const accuracy = this.state.percent[index];
     console.log(problem_num);
+    console.log(big);
     console.log(small);
     console.log(activity);
     console.log(level);
@@ -151,7 +156,10 @@ class TestCreatePage extends Component {
     this.props.dispatch(
       TestCreator.postProblem(
         problem_num,
+        big,
+        big_index,
         small,
+        small_index,
         activity,
         level,
         exam_id,
@@ -165,6 +173,12 @@ class TestCreatePage extends Component {
     const { testName, testCount, semester } = this.props.location.params;
     return (
       <div className="testCreatePage">
+        <Prompt
+          when={true}
+          message={location =>
+            "이 페이지를 나가면 정보가 손실됩니다. 그래도 나가시겠습니까?"
+          }
+        />
         <NavBar title={testName} />
         <Container>
           {this.state.value.map((data, index) => {

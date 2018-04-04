@@ -2,11 +2,72 @@ import { ServerEndPoint } from "../Configs/Server";
 export const SUCCEED_TO_GET_TEST = "SUCCEED_TO_GET_TEST";
 export const FAILED_TO_GET_TEST = "FAILED_TO_GET_TEST";
 
+export const SUCCEED_TO_GET_TEST_ONE = "SUCCEED_TO_GET_TEST_ONE";
+export const FAILED_TO_GET_TEST_ONE = "FAILED_TO_GET_TEST_ONE";
+
 export const SUCCEED_TO_POST_TEST = "SUCCEED_TO_POST_TEST";
 export const FAILED_TO_POST_TEST = "FAILED_TO_POST_TEST";
 
+export const SUCCEED_TO_GET_PROBLEM = "SUCCEED_TO_GET_PROBLEM";
+export const FAILED_TO_GET_PROBLEM = "FAILED_TO_GET_PROBLEM";
+
 export const SUCCEED_TO_POST_PROBLEM = "SUCCEED_TO_POST_PROBLEM";
 export const FAILED_TO_POST_PROBLEM = "FAILED_TO_POST_PROBLEM";
+
+export const getProblem = exam_id => {
+  return async dispatch => {
+    try {
+      let response = await fetch(
+        ServerEndPoint + "api/exam/problem/" + exam_id,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      await dispatch({
+        type: SUCCEED_TO_GET_PROBLEM,
+        payload: responseJson.result
+      });
+      return responseJson.result;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_GET_PROBLEM,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const getTest = exam_id => {
+  return async dispatch => {
+    try {
+      let response = await fetch(ServerEndPoint + "api/exam/" + exam_id, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      });
+      let responseJson = await response.json();
+      console.log(responseJson);
+      await dispatch({
+        type: SUCCEED_TO_GET_TEST_ONE,
+        payload: responseJson.result
+      });
+      return responseJson.result[0];
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_GET_TEST_ONE,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
 
 export const getTests = () => {
   return async dispatch => {
@@ -33,7 +94,16 @@ export const getTests = () => {
     }
   };
 };
-export const postTest = (title, school, grade, semester, question_num) => {
+export const postTest = (
+  title,
+  school,
+  school_index,
+  grade,
+  grade_index,
+  semester,
+  semester_index,
+  question_num
+) => {
   return async dispatch => {
     try {
       let response = await fetch(ServerEndPoint + "api/exam", {
@@ -45,8 +115,11 @@ export const postTest = (title, school, grade, semester, question_num) => {
         body: JSON.stringify({
           title: title,
           school: school,
+          school_index: school_index,
           grade: grade,
+          grade_index: grade_index,
           semester: semester,
+          semester_index: semester_index,
           question_num: question_num
         })
       });
@@ -68,7 +141,10 @@ export const postTest = (title, school, grade, semester, question_num) => {
 
 export const postProblem = (
   problem_num,
+  big,
+  big_index,
   small,
+  small_index,
   activity,
   level,
   exam_id,
@@ -85,7 +161,59 @@ export const postProblem = (
         },
         body: JSON.stringify({
           problem_num: problem_num,
+          big: big,
+          big_index: big_index,
           small: small,
+          small_index: small_index,
+          activity: activity,
+          level: level,
+          exam_id: exam_id,
+          content: content,
+          accuracy: accuracy
+        })
+      });
+      let responseJson = await response.json();
+      console.log(responseJson);
+      await dispatch({
+        type: SUCCEED_TO_POST_PROBLEM,
+        payload: responseJson
+      });
+      return responseJson;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_POST_PROBLEM,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const updateProblem = (
+  problem_num,
+  big,
+  big_index,
+  small,
+  small_index,
+  activity,
+  level,
+  exam_id,
+  content,
+  accuracy
+) => {
+  return async dispatch => {
+    try {
+      let response = await fetch(ServerEndPoint + "api/exam/problem", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          problem_num: problem_num,
+          big: big,
+          big_index: big_index,
+          small: small,
+          small_index: small_index,
           activity: activity,
           level: level,
           exam_id: exam_id,

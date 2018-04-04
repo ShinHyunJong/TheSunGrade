@@ -16,7 +16,8 @@ import {
   TestPage,
   ActionPage,
   LevelPage,
-  TestCreatePage
+  TestCreatePage,
+  TestDetailPage
 } from "./Pages/";
 
 const muiTheme = getMuiTheme({
@@ -41,6 +42,7 @@ class App extends Component {
             <Route path="/category/action" component={ActionPage} />
             <Route path="/category/level" component={LevelPage} />
             <Route exact path="/test" component={TestPage} />
+            <Route path="/test/:test_id" component={TestDetailPage} />
             <Route path="/test/create" component={TestCreatePage} />
           </div>
         </Router>

@@ -7,12 +7,14 @@ import { Container, Row, Col } from "reactstrap";
 import { NavBar, List } from "../../Components";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
-import { Link } from "react-router-dom";
+import { Link, Prompt } from "react-router-dom";
 import FloatingActionButton from "material-ui/FloatingActionButton";
 import ContentAdd from "material-ui/svg-icons/content/add";
 import TextField from "material-ui/TextField";
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton";
 import gradeJson from "../../Json/grade";
+import { ImageNavigateNext } from "material-ui/svg-icons";
+import { green600, green400 } from "material-ui/styles/colors";
 
 import * as DefaultActionCreator from "../../ActionCreators/_DefaultActionCreator";
 import * as ActivityCreator from "../../ActionCreators/ActivityCreator";
@@ -27,6 +29,12 @@ const mapStateToProps = state => {
     actionResult: state.reducer.actionResult,
     tests: state.reducer.tests
   };
+};
+
+const iconStyles = {
+  width: 30,
+  height: 30,
+  marginRight: 10
 };
 
 const styles = {
@@ -60,7 +68,9 @@ class TestPage extends Component {
       testCount: 0,
       selectedSchool: 0,
       selectedGrade: 0,
-      selectedSemester: 0
+      selectedSemester: 0,
+      nameStatus: false,
+      countStatus: false
     };
   }
 
@@ -108,51 +118,52 @@ class TestPage extends Component {
     this.setState({ selectedSemester: index });
   };
 
-  handlePost = () => {
+  handlePost = async() => {
     const grade = gradeJson.data;
-    console.log(
-      grade[this.state.selectedSchool].grade[this.state.selectedGrade].year
-    );
-    console.log(
-      grade[this.state.selectedSchool].grade[this.state.selectedGrade].semester[
-        this.state.selectedSemester
-      ].index
-    );
-
-    this.props.dispatch(
-      TestCreator.postTest(
-        this.state.testName,
-        grade[this.state.selectedSchool].school,
-        grade[this.state.selectedSchool].grade[this.state.selectedGrade].year,
-        grade[this.state.selectedSchool].grade[this.state.selectedGrade]
-          .semester[this.state.selectedSemester].index,
-        this.state.testCount
-      )
-    );
+    if (this.state.testName === "") {
+      this.setState({ nameStatus: true });
+    } else if (this.state.testCount === 0) {
+      this.setState({ countStatus: true });
+    } else {
+      await this.props
+        .dispatch(
+          TestCreator.postTest(
+            this.state.testName,
+            grade[this.state.selectedSchool].school,
+            this.state.selectedSchool,
+            grade[this.state.selectedSchool].grade[this.state.selectedGrade]
+              .year,
+            this.state.selectedGrade,
+            grade[this.state.selectedSchool].grade[this.state.selectedGrade]
+              .semester[this.state.selectedSemester].index,
+            this.state.selectedSemester,
+            this.state.testCount
+          )
+        )
+        .then(value => {
+          this.props.history.push({
+            pathname: "/test/" + value,
+            params: {
+              testName: this.state.testName,
+              testCount: this.state.testCount,
+              school: grade[this.state.selectedSchool].school,
+              grade:
+                grade[this.state.selectedSchool].grade[this.state.selectedGrade]
+                  .year,
+              semester:
+                grade[this.state.selectedSchool].grade[this.state.selectedGrade]
+                  .semester[this.state.selectedSemester]
+            }
+          });
+        });
+    }
   };
 
   render() {
     const grade = gradeJson.data;
     const actions = [
       <FlatButton label="취소" onClick={this.handleClose} />,
-      <Link
-        to={{
-          pathname: "/test/create",
-          params: {
-            testName: this.state.testName,
-            testCount: this.state.testCount,
-            school: grade[this.state.selectedSchool].school,
-            grade:
-              grade[this.state.selectedSchool].grade[this.state.selectedGrade]
-                .year,
-            semester:
-              grade[this.state.selectedSchool].grade[this.state.selectedGrade]
-                .semester[this.state.selectedSemester]
-          }
-        }}
-      >
-        <FlatButton label="생성" primary={true} onClick={this.handlePost} />
-      </Link>
+      <FlatButton label="생성" primary={true} onClick={this.handlePost} />
     ];
     return (
       <div className="testPage">
@@ -166,21 +177,41 @@ class TestPage extends Component {
           <Row className="testPage__dialog">
             <h2 className="testPage__dialog__title">이름</h2>
 
-            <TextField
-              onChange={this.handleName}
-              fullWidth={true}
-              hintText="ex) 심화"
-              style={styles.inputStyle}
-            />
+            {this.state.nameStatus === false ? (
+              <TextField
+                onChange={this.handleName}
+                fullWidth={true}
+                hintText="ex) 중1-1 입학테스트"
+                style={styles.inputStyle}
+              />
+            ) : (
+              <TextField
+                onChange={this.handleName}
+                fullWidth={true}
+                errorText="시험지 이름을 입력하세요"
+                hintText="ex) 중1-1 입학테스트"
+                style={styles.inputStyle}
+              />
+            )}
 
             <h2 className="testPage__dialog__title">문항수</h2>
 
-            <TextField
-              onChange={this.handleCount}
-              fullWidth={true}
-              hintText="ex) 30"
-              style={styles.inputStyle}
-            />
+            {this.state.countStatus === false ? (
+              <TextField
+                onChange={this.handleCount}
+                fullWidth={true}
+                hintText="ex) 30"
+                style={styles.inputStyle}
+              />
+            ) : (
+              <TextField
+                onChange={this.handleCount}
+                fullWidth={true}
+                errorText="시험지 문항수를 입력하세요"
+                hintText="ex) 30"
+                style={styles.inputStyle}
+              />
+            )}
 
             <Col className="testPage__dialog__section">
               <h2 className="testPage__dialog__section__title">학교선택</h2>
@@ -264,7 +295,19 @@ class TestPage extends Component {
           <Row className="testPage__content">
             {this.props.tests &&
               this.props.tests.map((data, index) => {
-                return <List key={index} content={data.title} />;
+                return (
+                  <Link key={index} to={"/test/" + data.id}>
+                    <List
+                      content={data.title}
+                      next={
+                        <ImageNavigateNext
+                          style={iconStyles}
+                          color={green600}
+                        />
+                      }
+                    />
+                  </Link>
+                );
               })}
           </Row>
           <FloatingActionButton

@@ -3,6 +3,8 @@
 
 import React, { Component } from "react";
 import Paper from "material-ui/Paper";
+import Datetime from "react-datetime";
+import Moment from "moment";
 
 const defaultProps = {};
 const propTypes = {};
@@ -10,7 +12,7 @@ const propTypes = {};
 const style = {
   height: 80,
   width: 500,
-  margin: 20,
+  marginTop: 20,
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
@@ -28,14 +30,23 @@ class List extends Component {
         <Paper className="list__content" style={style} zDepth={1}>
           <div className="list__content__name">
             <div className="list__content__name__label" />
-            <div className="list__content__name__text">
+            <span className="list__content__name__text">
               {this.props.content}
-            </div>
+            </span>
           </div>
           <div className="list__content__icon" onClick={this.props.onClickIcon}>
+            <span className="list__content__icon__count">
+              {this.props.count && this.props.count + "문항"}
+            </span>
             {this.props.next}
           </div>
         </Paper>
+        <div className="list__footer">
+          <span className="list__footer__text">
+            {this.props.date &&
+              Moment(this.props.date).format("YYYY년 MM월 DD일")}
+          </span>
+        </div>
       </div>
     );
   }

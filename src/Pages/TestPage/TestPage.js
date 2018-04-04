@@ -14,12 +14,13 @@ import TextField from "material-ui/TextField";
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton";
 import gradeJson from "../../Json/grade";
 import { ImageNavigateNext } from "material-ui/svg-icons";
-import { green600, green400 } from "material-ui/styles/colors";
+import { green600, green400, transparent } from "material-ui/styles/colors";
 
 import * as DefaultActionCreator from "../../ActionCreators/_DefaultActionCreator";
 import * as ActivityCreator from "../../ActionCreators/ActivityCreator";
 import * as LevelCreator from "../../ActionCreators/LevelCreator";
 import * as TestCreator from "../../ActionCreators/TestCreator";
+import { Tabs, Tab } from "material-ui/Tabs";
 
 const defaultProps = {};
 const propTypes = {};
@@ -38,6 +39,9 @@ const iconStyles = {
 };
 
 const styles = {
+  ink: {
+    backgroundColor: green600
+  },
   block: {
     maxWidth: 250
   },
@@ -47,9 +51,18 @@ const styles = {
   label: {
     width: 80
   },
+  tabs: {},
+
   inputStyle: {
     marginLeft: 70,
     marginRight: 70
+  },
+  tab: {
+    backgroundColor: transparent,
+    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.075)"
+  },
+  tabButton: {
+    color: "#5b5e6d"
   }
 };
 
@@ -168,6 +181,104 @@ class TestPage extends Component {
     return (
       <div className="testPage">
         <NavBar title="시험지 목록" />
+        <Tabs
+          tabTemplateStyle={styles.tabs}
+          tabItemContainerStyle={styles.tab}
+          inkBarStyle={styles.ink}
+        >
+          <Tab label="초등학교" buttonStyle={styles.tabButton}>
+            <Container>
+              <Row className="testPage__content">
+                <div>
+                  {this.props.tests &&
+                    this.props.tests
+                      .filter(tests => {
+                        return tests.school === "초등학교";
+                      })
+                      .map((data, index) => {
+                        return (
+                          <Link key={index} to={"/test/" + data.id}>
+                            <List
+                              content={data.title}
+                              count={data.question_num}
+                              date={data.created_at}
+                              next={
+                                <ImageNavigateNext
+                                  style={iconStyles}
+                                  color={green600}
+                                />
+                              }
+                            />
+                          </Link>
+                        );
+                      })}
+                </div>
+              </Row>
+            </Container>
+          </Tab>
+          <Tab label="중학교" buttonStyle={styles.tabButton}>
+            <div>
+              <Container>
+                <Row className="testPage__content">
+                  <div>
+                    {this.props.tests &&
+                      this.props.tests
+                        .filter(tests => {
+                          return tests.school === "중학교";
+                        })
+                        .map((data, index) => {
+                          return (
+                            <Link key={index} to={"/test/" + data.id}>
+                              <List
+                                content={data.title}
+                                count={data.question_num}
+                                date={data.created_at}
+                                next={
+                                  <ImageNavigateNext
+                                    style={iconStyles}
+                                    color={green600}
+                                  />
+                                }
+                              />
+                            </Link>
+                          );
+                        })}
+                  </div>
+                </Row>
+              </Container>
+            </div>
+          </Tab>
+          <Tab label="고등학교" buttonStyle={styles.tabButton}>
+            <Container>
+              <Row className="testPage__content">
+                <div>
+                  {this.props.tests &&
+                    this.props.tests
+                      .filter(tests => {
+                        return tests.school === "고등학교";
+                      })
+                      .map((data, index) => {
+                        return (
+                          <Link key={index} to={"/test/" + data.id}>
+                            <List
+                              content={data.title}
+                              count={data.question_num}
+                              date={data.created_at}
+                              next={
+                                <ImageNavigateNext
+                                  style={iconStyles}
+                                  color={green600}
+                                />
+                              }
+                            />
+                          </Link>
+                        );
+                      })}
+                </div>
+              </Row>
+            </Container>
+          </Tab>
+        </Tabs>
         <Dialog
           title="시험지 추가하기"
           actions={actions}
@@ -291,33 +402,14 @@ class TestPage extends Component {
             </Col>
           </Row>
         </Dialog>
-        <Container>
-          <Row className="testPage__content">
-            {this.props.tests &&
-              this.props.tests.map((data, index) => {
-                return (
-                  <Link key={index} to={"/test/" + data.id}>
-                    <List
-                      content={data.title}
-                      next={
-                        <ImageNavigateNext
-                          style={iconStyles}
-                          color={green600}
-                        />
-                      }
-                    />
-                  </Link>
-                );
-              })}
-          </Row>
-          <FloatingActionButton
-            style={styleAdd}
-            label="Modal Dialog"
-            onClick={this.handleOpen}
-          >
-            <ContentAdd />
-          </FloatingActionButton>
-        </Container>
+
+        <FloatingActionButton
+          style={styleAdd}
+          label="Modal Dialog"
+          onClick={this.handleOpen}
+        >
+          <ContentAdd />
+        </FloatingActionButton>
       </div>
     );
   }

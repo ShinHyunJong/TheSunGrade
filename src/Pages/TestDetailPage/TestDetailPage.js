@@ -342,7 +342,11 @@ class TestDetailPage extends Component {
     const { activity, level } = this.props;
     const gradeData = gradeJson.data;
     if (test === undefined || test === null || test.length === 0) {
-      return null;
+      return (
+        <div className="testDetailPage">
+          <NavBar title="" />
+        </div>
+      );
     } else {
       const semester =
         gradeData[test.school_index].grade[test.grade_index].semester[

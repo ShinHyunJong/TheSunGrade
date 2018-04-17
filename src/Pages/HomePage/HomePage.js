@@ -42,10 +42,6 @@ class HomePage extends Component {
     this.props.dispatch(LevelCreator.getLevel());
   }
 
-  handleClick = () => {
-    console.log("clicked!");
-  };
-
   render() {
     return (
       <div className="homePage">
@@ -54,22 +50,38 @@ class HomePage extends Component {
           handleClick={this.handleClick}
         />
         <div className="homePage__content">
-          <Paper className="homePage__content__make" style={style} zDepth={2}>
-            <h4 className="homePage__content__make__text">
-              채점 및 성적표 산출
-            </h4>
-          </Paper>
-          <Link to="/test" className="link">
-            <Paper className="homePage__content__make" style={style} zDepth={2}>
-              <h4 className="homePage__content__make__text">시험지 생성</h4>
-            </Paper>
-          </Link>
+          <div className="homePage__content__item">
+            <Link to="/grading" className="link">
+              <Paper
+                className="homePage__content__make"
+                style={style}
+                zDepth={2}
+              >
+                <h4 className="homePage__content__make__text">
+                  채점 및 성적표 산출
+                </h4>
+              </Paper>
+            </Link>
 
-          <Link to="/category" className="link">
-            <Paper className="homePage__content__make" style={style} zDepth={2}>
-              <h4 className="homePage__content__make__text">카테고리 입력</h4>
-            </Paper>
-          </Link>
+            <Link to="/test" className="link">
+              <Paper
+                className="homePage__content__make"
+                style={style}
+                zDepth={2}
+              >
+                <h4 className="homePage__content__make__text">시험지 생성</h4>
+              </Paper>
+            </Link>
+            <Link to="/category" className="link">
+              <Paper
+                className="homePage__content__make"
+                style={style}
+                zDepth={2}
+              >
+                <h4 className="homePage__content__make__text">카테고리 입력</h4>
+              </Paper>
+            </Link>
+          </div>
         </div>
       </div>
     );

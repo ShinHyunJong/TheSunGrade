@@ -13,7 +13,9 @@ import {
 import {
   SUCCEED_TO_GET_TEST,
   SUCCEED_TO_POST_TEST,
-  SUCCEED_TO_GET_TEST_ONE
+  SUCCEED_TO_GET_TEST_ONE,
+  SUCCEED_TO_POST_GRADE,
+  SUCCEED_TO_GET_RESULT
 } from "../ActionCreators/TestCreator";
 
 import { SUCCEED_TO_GET_LEVEL } from "../ActionCreators/LevelCreator";
@@ -24,7 +26,9 @@ const initialState = {
   level: null,
   tests: null,
   test: null,
-  test_one: null
+  test_one: null,
+  grade: [],
+  result: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -52,6 +56,14 @@ const reducer = (state = initialState, action) => {
     case SUCCEED_TO_POST_TEST:
       return Object.assign({}, state, {
         test: action.payload
+      });
+    case SUCCEED_TO_POST_GRADE:
+      return Object.assign({}, state, {
+        grade: action.payload
+      });
+    case SUCCEED_TO_GET_RESULT:
+      return Object.assign({}, state, {
+        result: action.payload
       });
 
     default:

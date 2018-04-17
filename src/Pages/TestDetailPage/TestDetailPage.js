@@ -22,6 +22,11 @@ import * as ActivityCreator from "../../ActionCreators/ActivityCreator";
 
 const defaultProps = {};
 const propTypes = {};
+const styleAdd = {
+  position: "fixed",
+  right: 250,
+  bottom: 100
+};
 
 const mapStateToProps = state => {
   return {
@@ -650,6 +655,13 @@ class TestDetailPage extends Component {
                 </div>
               );
             })}
+            <FloatingActionButton
+              style={styleAdd}
+              label="Modal Dialog"
+              onClick={this.handleOpen}
+            >
+              <ContentAdd />
+            </FloatingActionButton>
           </Container>
         </div>
       );

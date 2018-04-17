@@ -79,11 +79,13 @@ class TestPage extends Component {
       open: false,
       testName: "",
       testCount: 0,
+      testWriter: "",
       selectedSchool: 0,
       selectedGrade: 0,
       selectedSemester: 0,
       nameStatus: false,
-      countStatus: false
+      countStatus: false,
+      writerStatus: false
     };
   }
 
@@ -107,6 +109,10 @@ class TestPage extends Component {
 
   handleCount = e => {
     this.setState({ testCount: e.target.value });
+  };
+
+  handleWriter = e => {
+    this.setState({ testWriter: e.target.value });
   };
 
   handleSchool = index => {
@@ -137,6 +143,8 @@ class TestPage extends Component {
       this.setState({ nameStatus: true });
     } else if (this.state.testCount === 0) {
       this.setState({ countStatus: true });
+    } else if (this.state.testWriter === "") {
+      this.setState({ writerStatus: true });
     } else {
       await this.props
         .dispatch(
@@ -150,7 +158,8 @@ class TestPage extends Component {
             grade[this.state.selectedSchool].grade[this.state.selectedGrade]
               .semester[this.state.selectedSemester].index,
             this.state.selectedSemester,
-            this.state.testCount
+            this.state.testCount,
+            this.state.testWriter
           )
         )
         .then(value => {
@@ -200,6 +209,7 @@ class TestPage extends Component {
                           <Link key={index} to={"/test/" + data.id}>
                             <List
                               content={data.title}
+                              current={data.current_count}
                               count={data.question_num}
                               date={data.created_at}
                               next={
@@ -231,6 +241,7 @@ class TestPage extends Component {
                             <Link key={index} to={"/test/" + data.id}>
                               <List
                                 content={data.title}
+                                current={data.current_count}
                                 count={data.question_num}
                                 date={data.created_at}
                                 next={
@@ -262,6 +273,7 @@ class TestPage extends Component {
                           <Link key={index} to={"/test/" + data.id}>
                             <List
                               content={data.title}
+                              current={data.current_count}
                               count={data.question_num}
                               date={data.created_at}
                               next={
@@ -280,6 +292,7 @@ class TestPage extends Component {
           </Tab>
         </Tabs>
         <Dialog
+          className="testPage__modal"
           title="시험지 추가하기"
           actions={actions}
           modal={true}
@@ -320,6 +333,25 @@ class TestPage extends Component {
                 fullWidth={true}
                 errorText="시험지 문항수를 입력하세요"
                 hintText="ex) 30"
+                style={styles.inputStyle}
+              />
+            )}
+
+            <h2 className="testPage__dialog__title">작성자</h2>
+
+            {this.state.writerStatus === false ? (
+              <TextField
+                onChange={this.handleWriter}
+                fullWidth={true}
+                hintText="ex) 윤기은"
+                style={styles.inputStyle}
+              />
+            ) : (
+              <TextField
+                onChange={this.handleWriter}
+                fullWidth={true}
+                errorText="작성자를 입력하세요"
+                hintText="ex) 윤기은"
                 style={styles.inputStyle}
               />
             )}
@@ -403,11 +435,7 @@ class TestPage extends Component {
           </Row>
         </Dialog>
 
-        <FloatingActionButton
-          style={styleAdd}
-          label="Modal Dialog"
-          onClick={this.handleOpen}
-        >
+        <FloatingActionButton style={styleAdd} onClick={this.handleOpen}>
           <ContentAdd />
         </FloatingActionButton>
       </div>

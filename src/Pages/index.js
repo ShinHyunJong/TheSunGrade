@@ -15,3 +15,6 @@ export LabelPage from "./LabelPage/LabelPage";
 export BigLabelPage from "./BigLabelPage/BigLabelPage";
 export TestCreatePage from "./TestCreatePage/TestCreatePage";
 export TestDetailPage from "./TestDetailPage/TestDetailPage";
+export GradingPage from "./GradingPage/GradingPage";
+export ChooseTest from "./ChooseTest/ChooseTest";
+export ResultPage from "./ResultPage/ResultPage";

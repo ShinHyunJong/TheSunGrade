@@ -2,7 +2,7 @@
 * Author: @nayunhwan (github.com/nayunhwan)
 * Email: nayunhwan.dev@mgail.com
 */
-.testPage {
+.chooseTest {
   &__modal {
     overflow-y: scroll !important;
   }
@@ -34,6 +34,11 @@
   &__content {
     display: flex;
     justify-content: center;
+
+    &__chips {
+      display: flex;
+      flex-direction: row;
+    }
 
     &__section {
       display: flex;

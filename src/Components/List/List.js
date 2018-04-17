@@ -26,7 +26,7 @@ class List extends Component {
 
   render() {
     return (
-      <div className="list">
+      <div className="list" onClick={this.props.onClick}>
         <Paper className="list__content" style={style} zDepth={1}>
           <div className="list__content__name">
             <div className="list__content__name__label" />
@@ -36,6 +36,9 @@ class List extends Component {
           </div>
           <div className="list__content__icon" onClick={this.props.onClickIcon}>
             <span className="list__content__icon__count">
+              <span className="list__content__icon__current">
+                {this.props.current && this.props.current + "/"}
+              </span>
               {this.props.count && this.props.count + "문항"}
             </span>
             {this.props.next}

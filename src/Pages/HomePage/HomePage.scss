@@ -3,11 +3,21 @@
 * Email: nayunhwan.dev@mgail.com
 */
 .homePage {
+  overflow-y: hidden;
+
   &__content {
     display: flex;
-    height: 100vh;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
+    height: 90vh;
+
+    &__item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+    }
 
     &__make {
       color: $main-color !important;

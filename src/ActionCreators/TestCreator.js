@@ -14,6 +14,12 @@ export const FAILED_TO_GET_PROBLEM = "FAILED_TO_GET_PROBLEM";
 export const SUCCEED_TO_POST_PROBLEM = "SUCCEED_TO_POST_PROBLEM";
 export const FAILED_TO_POST_PROBLEM = "FAILED_TO_POST_PROBLEM";
 
+export const SUCCEED_TO_POST_GRADE = "SUCCEED_TO_POST_GRADE";
+export const FAILED_TO_POST_GRADE = "FAILED_TO_POST_GRADE";
+
+export const SUCCEED_TO_GET_RESULT = "SUCCEED_TO_GET_RESULT";
+export const FAILED_TO_GET_RESULT = "FAILED_TO_POST_RESULT";
+
 export const getProblem = exam_id => {
   return async dispatch => {
     try {
@@ -102,7 +108,8 @@ export const postTest = (
   grade_index,
   semester,
   semester_index,
-  question_num
+  question_num,
+  writer
 ) => {
   return async dispatch => {
     try {
@@ -120,7 +127,8 @@ export const postTest = (
           grade_index: grade_index,
           semester: semester,
           semester_index: semester_index,
-          question_num: question_num
+          question_num: question_num,
+          writer: writer
         })
       });
       let responseJson = await response.json();
@@ -231,6 +239,71 @@ export const updateProblem = (
     } catch (error) {
       dispatch({
         type: FAILED_TO_POST_PROBLEM,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const postGrade = params => {
+  return async dispatch => {
+    try {
+      let response = await fetch(ServerEndPoint + "api/exam/result", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: params.name,
+          grade: params.grade,
+          school: params.school,
+          selectedId: params.selectedId,
+          selected: params.numberString
+        })
+      });
+      let responseJson = await response.json();
+      console.log(responseJson);
+      await dispatch({
+        type: SUCCEED_TO_POST_GRADE,
+        payload: responseJson
+      });
+      return responseJson;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_POST_GRADE,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const getResult = params => {
+  return async dispatch => {
+    try {
+      let response = await fetch(
+        ServerEndPoint +
+          `api/exam/result?exam_id=${params.exam_id}&student_name=${
+            params.student_name
+          }`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      await dispatch({
+        type: SUCCEED_TO_GET_RESULT,
+        payload: responseJson.result
+      });
+      return responseJson;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_GET_RESULT,
         payload: { data: "NETWORK_ERROR" }
       });
     }

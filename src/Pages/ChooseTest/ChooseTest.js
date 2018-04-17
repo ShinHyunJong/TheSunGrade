@@ -101,10 +101,9 @@ class ChooseTest extends Component {
       open: false,
       selectedId: null,
       selectedTitle: "",
-      selectedType: 0,
+      selectedType: "0",
       selectedTypeText: "정답",
       selectedNumber: [],
-
       selectedQnum: 0,
       displayNumber: []
     };
@@ -234,7 +233,7 @@ class ChooseTest extends Component {
                   <h5>1. 정/오답 선택</h5>
                   <RadioButtonGroup
                     name="shipSpeed"
-                    defaultSelected="0"
+                    defaultSelected={this.state.selectedType}
                     onChange={this.handleRadio}
                     style={styles.radioGroup}
                   >
@@ -295,7 +294,7 @@ class ChooseTest extends Component {
 
                     <RadioButtonGroup
                       name="shipSpeed"
-                      defaultSelected="0"
+                      defaultSelected={this.state.selectedType}
                       onChange={this.handleRadio}
                       style={styles.radioGroup}
                     >
@@ -354,7 +353,7 @@ class ChooseTest extends Component {
                   <h5>1. 정/오답 선택</h5>
                   <RadioButtonGroup
                     name="shipSpeed"
-                    defaultSelected="0"
+                    defaultSelected={this.state.selectedType}
                     onChange={this.handleRadio}
                     style={styles.radioGroup}
                   >

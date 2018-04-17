@@ -38,7 +38,7 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <Router>
+        <Router basename="/sungrade">
           <div>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/category" component={CategoryPage} />

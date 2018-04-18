@@ -2,6 +2,7 @@
 // If you want to make other page, Copy and Refactor this page.
 
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { Container, Row, Col } from "reactstrap";
 import { NavBar, List } from "../../Components";
@@ -12,11 +13,54 @@ import TextField from "material-ui/TextField";
 import ContentAdd from "material-ui/svg-icons/content/add";
 import * as TestCreator from "../../ActionCreators/TestCreator";
 import cx from "classnames";
+import ReactToPrint from "react-to-print";
+import {
+  LineChart,
+  BarChart,
+  ComposedChart,
+  Bar,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis
+} from "recharts";
 
 import * as DefaultActionCreator from "../../ActionCreators/_DefaultActionCreator";
 
 const defaultProps = {};
 const propTypes = {};
+
+const data = [
+  { name: "정수와 유리수(1상)", 정답률: 70, 평균: 80.5 },
+  { name: "문자와 식(1상)", 정답률: 60, 평균: 64 },
+  { name: "자연수(1상)", 정답률: 65, 평균: 50 },
+  { name: "일차방정식(1상)", 정답률: 55, 평균: 70 },
+  { name: "좌표평면과 그래프(1상)", 정답률: 55, 평균: 40 },
+  { name: "식의 계산(2상)", 정답률: 55, 평균: 70 },
+  { name: "부등식(2상)", 정답률: 85, 평균: 60 },
+  { name: "연립방정식(2상)", 정답률: 55, 평균: 70 },
+  { name: "일차함수", 정답률: 45, 평균: 10 },
+  { name: "유리수와 순환소수", 정답률: 55, 평균: 70 }
+];
+
+const data2 = [
+  { subject: "이해", 정답률: 90, 평균: 70 },
+  { subject: "계산", 정답률: 20, 평균: 50 },
+  { subject: "외적연관", 정답률: 55, 평균: 80 }
+];
+
+const data3 = [
+  { subject: "개념", 정답률: 90, 평균: 70 },
+  { subject: "응용", 정답률: 20, 평균: 50 },
+  { subject: "심화", 정답률: 55, 평균: 80 }
+];
 
 const mapStateToProps = state => {
   return {
@@ -41,7 +85,6 @@ class ResultPage extends Component {
   }
 
   render() {
-    console.log(this.props);
     const { result } = this.props;
     const halfLength = parseInt(result.length / 2);
     const restLength = result.length - halfLength;
@@ -50,7 +93,10 @@ class ResultPage extends Component {
 
     return (
       <div className="resultPage">
-        <div className="resultPage__content">
+        <div
+          className="resultPage__content"
+          ref={el => (this.componentRef = el)}
+        >
           <h4 className="resultPage__content__title">
             {selectedTitle + " 결과"}
           </h4>
@@ -144,6 +190,93 @@ class ResultPage extends Component {
               <tfoot />
             </table>
           </div>
+          <br />
+          <p>단원별 분석</p>
+          <ComposedChart width={900} height={300} data={data}>
+            <XAxis dataKey="name" tick={{ fontSize: 10 }} interval={0} />
+            <YAxis />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip />
+            <Text width={10} />
+            <Legend />
+
+            <Bar
+              type="monotone"
+              dataKey="정답률"
+              fill="#709fb0"
+              label={{ fontSize: 10, color: "#ffffff" }}
+            />
+            <Line
+              type="monotone"
+              dataKey="평균"
+              fill="#ffffff"
+              stroke="#ff7300"
+            />
+          </ComposedChart>
+          <br />
+          <div className="resultPage__content__chart">
+            <div className="resultPage__content__chart__active">
+              <p>행동영역별 분석</p>
+
+              <RadarChart
+                outerRadius={90}
+                width={450}
+                height={250}
+                data={data2}
+              >
+                <PolarGrid />
+                <PolarAngleAxis dataKey="subject" />
+                <PolarRadiusAxis angle={30} tickCount={5} domain={[0, 100]} />
+                <Radar
+                  name="평균"
+                  dataKey="평균"
+                  stroke="#ff7300"
+                  fill="#ff7300"
+                  fillOpacity={0.6}
+                />
+                <Radar
+                  name="정답률"
+                  dataKey="정답률"
+                  stroke="#709fb0"
+                  fill="#709fb0"
+                  fillOpacity={0.6}
+                />
+                <Legend />
+              </RadarChart>
+            </div>
+            <div>
+              <div className="resultPage__content__chart__level">
+                <p>난이도별 분석</p>
+                <RadarChart
+                  outerRadius={90}
+                  width={450}
+                  height={250}
+                  data={data3}
+                >
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="subject" />
+                  <PolarRadiusAxis angle={30} tickCount={5} domain={[0, 100]} />
+
+                  <Radar
+                    name="평균"
+                    dataKey="평균"
+                    stroke="#ff7300"
+                    fill="#ff7300"
+                    fillOpacity={0.6}
+                  />
+                  <Radar
+                    name="정답률"
+                    dataKey="정답률"
+                    stroke="#709fb0"
+                    fill="#709fb0"
+                    fillOpacity={0.6}
+                  />
+                  <Legend />
+                </RadarChart>
+              </div>
+            </div>
+          </div>
+          <button onClick={() => window.print()}>인쇄하기</button>
         </div>
       </div>
     );

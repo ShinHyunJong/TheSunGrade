@@ -14,6 +14,9 @@ export const FAILED_TO_GET_PROBLEM = "FAILED_TO_GET_PROBLEM";
 export const SUCCEED_TO_POST_PROBLEM = "SUCCEED_TO_POST_PROBLEM";
 export const FAILED_TO_POST_PROBLEM = "FAILED_TO_POST_PROBLEM";
 
+export const SUCCEED_TO_UPDATE_PROBLEM = "SUCCEED_TO_UPDATE_PROBLEM";
+export const FAILED_TO_UPDATE_PROBLEM = "FAILED_TO_UPDATE_PROBLEM";
+
 export const SUCCEED_TO_POST_GRADE = "SUCCEED_TO_POST_GRADE";
 export const FAILED_TO_POST_GRADE = "FAILED_TO_POST_GRADE";
 
@@ -232,13 +235,13 @@ export const updateProblem = (
       let responseJson = await response.json();
       console.log(responseJson);
       await dispatch({
-        type: SUCCEED_TO_POST_PROBLEM,
+        type: SUCCEED_TO_UPDATE_PROBLEM,
         payload: responseJson
       });
       return responseJson;
     } catch (error) {
       dispatch({
-        type: FAILED_TO_POST_PROBLEM,
+        type: FAILED_TO_UPDATE_PROBLEM,
         payload: { data: "NETWORK_ERROR" }
       });
     }

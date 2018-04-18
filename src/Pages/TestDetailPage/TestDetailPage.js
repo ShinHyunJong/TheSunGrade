@@ -76,63 +76,95 @@ class TestDetailPage extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(LevelCreator.getLevel());
-    this.props.dispatch(ActivityCreator.getActivity());
     const { test_id } = this.props.match.params;
     const oriArray = [];
     const valueArray = [];
     const booleanArray = [];
-    this.props.dispatch(TestActionCreator.getTest(test_id)).then(value => {
-      this.setState({ test: value });
-      for (let i = 0; i < value.question_num; i++) {
-        oriArray.push("");
-        valueArray.push(0);
-        booleanArray.push(false);
-      }
-      this.setState(state => ({
-        question_num: oriArray,
-        activity: valueArray,
-        level: valueArray,
-        value: valueArray,
-        smallValue: valueArray,
-        content: oriArray,
-        percent: oriArray,
-        isPosted: booleanArray
-      }));
-      this.props
-        .dispatch(TestActionCreator.getProblem(test_id))
-        .then(value2 => {
-          const leftLength = value.question_num - value2.length;
-          const leftArray = [];
-          for (let i = 0; i < leftLength; i++) {
-            leftArray.push("");
+    const levelArray = [];
+    const activityArray = [];
+    this.props.dispatch(LevelCreator.getLevel()).then(levels => {
+      this.props.dispatch(ActivityCreator.getActivity()).then(activities => {
+        this.props.dispatch(TestActionCreator.getTest(test_id)).then(value => {
+          this.setState({ test: value });
+          for (let i = 0; i < value.question_num; i++) {
+            oriArray.push("");
+            valueArray.push(0);
+            booleanArray.push(false);
+            activityArray.push(activities[0].name);
+            levelArray.push(levels[0].name);
           }
-          this.setState({ leftTest: leftArray, leftNumber: value2.length });
-          this.setState({ problems: value2 });
-          let newValue = this.state.value.slice(); //copy the array
-          let newSmall = this.state.smallValue.slice();
-          let newActivity = this.state.activity.slice();
-          let newLevel = this.state.level.slice();
-          let newContent = this.state.content.slice();
-          let newPercent = this.state.percent.slice(); //copy the array
+          this.setState(state => ({
+            question_num: oriArray,
+            activity: activityArray,
+            level: levelArray,
+            value: valueArray,
+            smallValue: valueArray,
+            content: oriArray,
+            percent: oriArray,
+            isPosted: booleanArray
+          }));
+          this.props
+            .dispatch(TestActionCreator.getProblem(test_id))
+            .then(value2 => {
+              const leftLength = value.question_num - value2.length;
+              const leftArray = [];
+              for (let i = 0; i < leftLength; i++) {
+                leftArray.push("");
+              }
+              this.setState({
+                leftTest: leftArray,
+                leftNumber: value2.length,
+                problems: value2
+              });
+              let newValue = this.state.value.slice(); //copy the array
+              let newSmall = this.state.smallValue.slice();
+              let newActivity = this.state.activity.slice();
+              let newLevel = this.state.level.slice();
+              let newContent = this.state.content.slice();
+              let newPercent = this.state.percent.slice(); //copy the array
+              let newIsPosted = this.state.isPosted.slice();
 
-          for (let i = 0; i < value2.length; i++) {
-            newValue[i] = value2[i].big_index;
-            newSmall[i] = value2[i].small_index;
-            newActivity[i] = value2[i].activity;
-            newLevel[i] = value2[i].level;
-            newContent[i] = value2[i].content;
-            newPercent[i] = value2[i].accuracy; //execute the manipulations
-          }
-          this.setState({
-            value: newValue,
-            smallValue: newSmall,
-            activity: newActivity,
-            level: newLevel,
-            content: newContent,
-            percent: newPercent
-          });
+              for (let i = 0; i < value2.length; i++) {
+                newValue.splice(
+                  value2[i].problem_num - 1,
+                  1,
+                  value2[i].big_index
+                );
+                newSmall.splice(
+                  value2[i].problem_num - 1,
+                  1,
+                  value2[i].small_index
+                );
+                newIsPosted.splice(value2[i].problem_num - 1, 1, true);
+                newActivity.splice(
+                  value2[i].problem_num - 1,
+                  1,
+                  value2[i].activity
+                );
+                newLevel.splice(value2[i].problem_num - 1, 1, value2[i].level);
+                newContent.splice(
+                  value2[i].problem_num - 1,
+                  1,
+                  value2[i].content
+                );
+                newPercent.splice(
+                  value2[i].problem_num - 1,
+                  1,
+                  value2[i].accuracy
+                );
+              }
+              this.setState({
+                value: newValue,
+                smallValue: newSmall,
+                activity: newActivity,
+                level: newLevel,
+                content: newContent,
+                percent: newPercent,
+                isPosted: newIsPosted
+              });
+            });
         });
+      });
     });
   }
 
@@ -188,7 +220,6 @@ class TestDetailPage extends Component {
   };
 
   handleProblem = index => {
-    console.log(this.state.activity[index]);
     const { test } = this.state;
     const { test_id } = this.props.match.params;
 
@@ -203,21 +234,21 @@ class TestDetailPage extends Component {
     const small =
       semester.big[this.state.value[index]].small[this.state.smallValue[index]];
     const small_index = this.state.smallValue[index];
-    const activity = this.props.activity[this.state.activity[index]].name;
-    const level = this.props.level[this.state.level[index]].name;
+    const activity = this.state.activity[index];
+    const level = this.state.level[index];
     const exam_id = test_id;
     const content = this.state.content[index];
     const accuracy = this.state.percent[index];
-    console.log(problem_num);
-    console.log(big);
-    console.log(big_index);
-    console.log(small);
-    console.log(small_index);
-    console.log(activity);
-    console.log(level);
-    console.log(exam_id);
-    console.log(content);
-    console.log(accuracy);
+    console.log("문제번호 " + problem_num);
+    console.log("대단원: " + big);
+    console.log("대단원인덱스: " + big_index);
+    console.log("소단원: " + small);
+    console.log("소단원인덱스: " + small_index);
+    console.log("행동영역: " + activity);
+    console.log("난이도: " + level);
+    console.log("시험아이디: " + exam_id);
+    console.log("내용영역: " + content);
+    console.log("정확도: " + accuracy);
     let newValue = this.state.isPosted.slice(); //copy the array
     newValue[index] = true; //execute the manipulations
     this.setState({ isPosted: newValue, open: true }); //set the new state
@@ -259,16 +290,16 @@ class TestDetailPage extends Component {
     const exam_id = test_id;
     const content = this.state.content[index];
     const accuracy = this.state.percent[index];
-    console.log(problem_num);
-    console.log(big);
-    console.log(big_index);
-    console.log(small);
-    console.log(small_index);
-    console.log(activity);
-    console.log(level);
-    console.log(exam_id);
-    console.log(content);
-    console.log(accuracy);
+    console.log("문제번호 " + problem_num);
+    console.log("대단원: " + big);
+    console.log("대단원인덱스: " + big_index);
+    console.log("소단원: " + small);
+    console.log("소단원인덱스: " + small_index);
+    console.log("행동영역: " + activity);
+    console.log("난이도: " + level);
+    console.log("시험아이디: " + exam_id);
+    console.log("내용영역: " + content);
+    console.log("정확도: " + accuracy);
     let newValue = this.state.isPosted.slice(); //copy the array
     newValue[index] = true; //execute the manipulations
     this.setState({ isPosted: newValue, openEdit: true }); //set the new state
@@ -327,7 +358,7 @@ class TestDetailPage extends Component {
     // this.setState({ open: true });
 
     this.props.dispatch(
-      TestActionCreator.postProblem(
+      TestActionCreator.updateProblem(
         problem_num,
         big,
         big_index,
@@ -343,7 +374,14 @@ class TestDetailPage extends Component {
   };
 
   render() {
-    const { test, problems, leftTest, leftNumber } = this.state;
+    const {
+      test,
+      problems,
+      leftTest,
+      leftNumber,
+      question_num,
+      isPosted
+    } = this.state;
     const { activity, level } = this.props;
     const gradeData = gradeJson.data;
     if (test === undefined || test === null || test.length === 0) {
@@ -362,14 +400,20 @@ class TestDetailPage extends Component {
         <div className="testDetailPage">
           <NavBar title={test.title} />
           <Container>
-            {problems &&
-              problems.map((data, index) => {
+            {question_num &&
+              question_num.map((data, index) => {
                 return (
                   <div className="testDetailPage__content" key={index}>
                     <Row className="testDetailPage__content__title">
-                      <h3 className="testDetailPage__content__title__text__isPosted">
-                        {index + 1}번 문제가 등록되었습니다.
-                      </h3>
+                      {isPosted[index] === true ? (
+                        <h3 className="testDetailPage__content__title__text__isPosted">
+                          {index + 1}번 문제가 등록되었습니다.
+                        </h3>
+                      ) : (
+                        <h3 className="testDetailPage__content__title__text">
+                          {index + 1}번 문제
+                        </h3>
+                      )}
                     </Row>
                     <Row className="testDetailPage__content__label">
                       <span className="testDetailPage__content__label__text">
@@ -480,188 +524,41 @@ class TestDetailPage extends Component {
                         style={styles.input}
                       />
                     </Row>
-                    <RaisedButton
-                      label="수정"
-                      buttonStyle={styles.buttonColor}
-                      labelPosition="before"
-                      onClick={() => this.handleUpdate(index)}
-                      primary={true}
-                      style={styles.button}
+                    <Snackbar
+                      open={this.state.open}
+                      message="문제 등록에 성공하였습니다"
+                      autoHideDuration={3000}
+                      onRequestClose={this.handleRequestClose}
                     />
-                  </div>
-                );
-              })}
-            <hr />
-            {leftTest.map((data, index) => {
-              return (
-                <div className="testDetailPage__content" key={index}>
-                  <Row className="testDetailPage__content__title">
-                    {this.state.isPosted[index + leftNumber] === false ? (
-                      <h3 className="testDetailPage__content__title__text">
-                        {index + leftNumber + 1}번 문제
-                      </h3>
-                    ) : (
-                      <h3 className="testDetailPage__content__title__text__isPosted">
-                        {index + leftNumber + 1}번 문제가 등록되었습니다
-                      </h3>
-                    )}
-                  </Row>
-                  <Row className="testDetailPage__content__label">
-                    <span className="testDetailPage__content__label__text">
-                      대단원
-                    </span>
-                    <span className="testDetailPage__content__label__text">
-                      소단원
-                    </span>
-                    <span className="testDetailPage__content__label__text">
-                      행동영역
-                    </span>
-                    <span className="testDetailPage__content__label__text">
-                      난이도
-                    </span>
-                  </Row>
-                  <Row>
-                    <DropDownMenu
-                      value={this.state.value[index + leftNumber]}
-                      onChange={(event, key, value) =>
-                        this.handleBig(event, key, value, index + leftNumber)
-                      }
-                      style={styles.customWidth}
-                      autoWidth={false}
-                    >
-                      {semester.map((data, bigIndex) => {
-                        return (
-                          <MenuItem
-                            key={bigIndex}
-                            value={bigIndex}
-                            primaryText={data.name}
-                          />
-                        );
-                      })}
-                    </DropDownMenu>
-
-                    <DropDownMenu
-                      value={this.state.smallValue[index + leftNumber]}
-                      onChange={(event, key, value) =>
-                        this.handleSmall(event, key, value, index + leftNumber)
-                      }
-                      style={styles.customWidth}
-                      autoWidth={false}
-                    >
-                      {semester[this.state.value[index + leftNumber]].small.map(
-                        (data, smallIndex) => {
-                          return (
-                            <MenuItem
-                              key={smallIndex}
-                              value={smallIndex}
-                              primaryText={data}
-                            />
-                          );
-                        }
-                      )}
-                    </DropDownMenu>
-
-                    <DropDownMenu
-                      value={this.state.activity[index + leftNumber]}
-                      onChange={(event, key, value) =>
-                        this.handleActivity(
-                          event,
-                          key,
-                          value,
-                          index + leftNumber
-                        )
-                      }
-                      style={styles.customWidth}
-                      autoWidth={false}
-                    >
-                      {activity &&
-                        activity.map((data, index) => {
-                          return (
-                            <MenuItem
-                              key={index}
-                              value={index}
-                              primaryText={data.name}
-                            />
-                          );
-                        })}
-                    </DropDownMenu>
-
-                    <DropDownMenu
-                      value={this.state.level[index + leftNumber]}
-                      onChange={(event, key, value) =>
-                        this.handleLevel(event, key, value, index + leftNumber)
-                      }
-                      style={styles.customWidth}
-                      autoWidth={false}
-                    >
-                      {level &&
-                        level.map((data, index) => {
-                          return (
-                            <MenuItem
-                              key={index}
-                              value={index}
-                              primaryText={data.name}
-                            />
-                          );
-                        })}
-                    </DropDownMenu>
-                  </Row>
-                  <Row className="testDetailPage__content__input">
-                    <TextField
-                      onChange={e => this.handleContent(e, index + leftNumber)}
-                      hintText="내용영역"
-                      value={this.state.content[index + leftNumber]}
-                      style={styles.input}
+                    <Snackbar
+                      open={this.state.openEdit}
+                      message="문제 수정에 성공하였습니다"
+                      autoHideDuration={3000}
+                      onRequestClose={this.handleRequestClose2}
                     />
-                    <TextField
-                      onChange={e => this.handlePercent(e, index + leftNumber)}
-                      hintText="정답률"
-                      value={this.state.percent[index + leftNumber]}
-                      style={styles.input}
-                    />
-                  </Row>
-                  <Row>
-                    {this.state.isPosted[index + leftNumber] === false ? (
-                      <RaisedButton
-                        label="등록"
-                        labelPosition="before"
-                        primary={true}
-                        onClick={() => this.handleProblem(index + leftNumber)}
-                        style={styles.button}
-                      />
-                    ) : (
+
+                    {isPosted[index] === true ? (
                       <RaisedButton
                         label="수정"
                         buttonStyle={styles.buttonColor}
                         labelPosition="before"
+                        onClick={() => this.handleUpdate(index)}
                         primary={true}
-                        onClick={() => this.handleUpdateNew(index + leftNumber)}
+                        style={styles.button}
+                      />
+                    ) : (
+                      <RaisedButton
+                        label="등록"
+                        labelPosition="before"
+                        onClick={() => this.handleProblem(index)}
+                        primary={true}
                         style={styles.button}
                       />
                     )}
-                  </Row>
-                  <Snackbar
-                    open={this.state.open}
-                    message="문제 등록에 성공하였습니다"
-                    autoHideDuration={3000}
-                    onRequestClose={this.handleRequestClose}
-                  />
-                  <Snackbar
-                    open={this.state.openEdit}
-                    message="문제 수정에 성공하였습니다"
-                    autoHideDuration={3000}
-                    onRequestClose={this.handleRequestClose2}
-                  />
-                </div>
-              );
-            })}
-            <FloatingActionButton
-              style={styleAdd}
-              label="Modal Dialog"
-              onClick={this.handleOpen}
-            >
-              <ContentAdd />
-            </FloatingActionButton>
+                  </div>
+                );
+              })}
+            <hr />
           </Container>
         </div>
       );

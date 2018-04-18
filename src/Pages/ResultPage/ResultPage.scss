@@ -45,5 +45,24 @@
         }
       }
     }
+
+    &__chart {
+      display: flex;
+      flex-direction: row;
+
+      &__active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      &__level {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    }
   }
 }

@@ -189,8 +189,7 @@ class ChooseTest extends Component {
       numberString = newArray.join("");
     }
 
-    console.log("check!");
-    console.log(numberString);
+
     const { name, grade, school } = this.props.location.state;
     const { selectedType, selectedId, selectedTitle } = this.state;
 
@@ -202,7 +201,6 @@ class ChooseTest extends Component {
       selectedType,
       numberString
     };
-    console.log(params);
     this.props.dispatch(TestCreator.postGrade(params)).then(value => {
       this.props.history.push({
         pathname: "/grading/" + selectedId + "/" + name,

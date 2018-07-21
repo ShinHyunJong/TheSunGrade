@@ -23,6 +23,15 @@ export const FAILED_TO_POST_GRADE = "FAILED_TO_POST_GRADE";
 export const SUCCEED_TO_GET_RESULT = "SUCCEED_TO_GET_RESULT";
 export const FAILED_TO_GET_RESULT = "FAILED_TO_POST_RESULT";
 
+export const SUCCEED_TO_GET_RESULT_SMALL = "SUCCEED_TO_GET_RESULT_SMALL";
+export const FAILED_TO_GET_RESULT_SMALL = "FAILED_TO_GET_RESULT_SMALL";
+
+export const SUCCEED_TO_GET_RESULT_ACTIVE = "SUCCEED_TO_GET_RESULT_ACTIVE";
+export const FAILED_TO_GET_RESULT_ACTIVE = "FAILED_TO_GET_RESULT_ACTIVE";
+
+export const SUCCEED_TO_GET_RESULT_LEVEL = "SUCCEED_TO_GET_RESULT_LEVEL";
+export const FAILED_TO_GET_RESULT_LEVEL = "FAILED_TO_GET_RESULT_LEVEL";
+
 export const getProblem = exam_id => {
   return async dispatch => {
     try {
@@ -307,6 +316,102 @@ export const getResult = params => {
     } catch (error) {
       dispatch({
         type: FAILED_TO_GET_RESULT,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const getResultSmall = params => {
+  return async dispatch => {
+    try {
+      let response = await fetch(
+        ServerEndPoint +
+          `api/exam/result/small?exam_id=${params.exam_id}&student_name=${
+            params.student_name
+          }`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      await dispatch({
+        type: SUCCEED_TO_GET_RESULT_SMALL,
+        payload: responseJson.final
+      });
+      return responseJson.final;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_GET_RESULT_SMALL,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const getResultActivity = params => {
+  return async dispatch => {
+    try {
+      let response = await fetch(
+        ServerEndPoint +
+          `api/exam/result/activity?exam_id=${params.exam_id}&student_name=${
+            params.student_name
+          }`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      await dispatch({
+        type: SUCCEED_TO_GET_RESULT_ACTIVE,
+        payload: responseJson.final
+      });
+      return responseJson.final;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_GET_RESULT_ACTIVE,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const getResultLevel = params => {
+  return async dispatch => {
+    try {
+      let response = await fetch(
+        ServerEndPoint +
+          `api/exam/result/level?exam_id=${params.exam_id}&student_name=${
+            params.student_name
+          }`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      await dispatch({
+        type: SUCCEED_TO_GET_RESULT_LEVEL,
+        payload: responseJson.final
+      });
+      return responseJson.final;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_GET_RESULT_LEVEL,
         payload: { data: "NETWORK_ERROR" }
       });
     }

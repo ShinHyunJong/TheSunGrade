@@ -5,6 +5,9 @@
 .list {
   &__content {
     color: $main-color !important;
+    &:hover {
+      border: 1px $main-color solid;
+    }
 
     &__name {
       display: flex;

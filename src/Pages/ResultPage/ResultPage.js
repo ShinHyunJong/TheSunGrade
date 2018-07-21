@@ -13,7 +13,7 @@ import TextField from "material-ui/TextField";
 import ContentAdd from "material-ui/svg-icons/content/add";
 import * as TestCreator from "../../ActionCreators/TestCreator";
 import cx from "classnames";
-import ReactToPrint from "react-to-print";
+import TheSunLogo from "../../Assets/Imgs/thesunlogo_cross.png";
 import {
   LineChart,
   BarChart,
@@ -33,34 +33,10 @@ import {
 } from "recharts";
 
 import * as DefaultActionCreator from "../../ActionCreators/_DefaultActionCreator";
+import { fade } from "material-ui/utils/colorManipulator";
 
 const defaultProps = {};
 const propTypes = {};
-
-const data = [
-  { name: "정수와 유리수(1상)", 정답률: 70, 평균: 80.5 },
-  { name: "문자와 식(1상)", 정답률: 60, 평균: 64 },
-  { name: "자연수(1상)", 정답률: 65, 평균: 50 },
-  { name: "일차방정식(1상)", 정답률: 55, 평균: 70 },
-  { name: "좌표평면과 그래프(1상)", 정답률: 55, 평균: 40 },
-  { name: "식의 계산(2상)", 정답률: 55, 평균: 70 },
-  { name: "부등식(2상)", 정답률: 85, 평균: 60 },
-  { name: "연립방정식(2상)", 정답률: 55, 평균: 70 },
-  { name: "일차함수", 정답률: 45, 평균: 10 },
-  { name: "유리수와 순환소수", 정답률: 55, 평균: 70 }
-];
-
-const data2 = [
-  { subject: "이해", 정답률: 90, 평균: 70 },
-  { subject: "계산", 정답률: 20, 평균: 50 },
-  { subject: "외적연관", 정답률: 55, 평균: 80 }
-];
-
-const data3 = [
-  { subject: "개념", 정답률: 90, 평균: 70 },
-  { subject: "응용", 정답률: 20, 평균: 50 },
-  { subject: "심화", 정답률: 55, 평균: 80 }
-];
 
 const mapStateToProps = state => {
   return {
@@ -71,21 +47,54 @@ const mapStateToProps = state => {
 class ResultPage extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      smallData: [],
+      activityData: [],
+      levelData: []
+    };
   }
 
   componentDidMount() {
-    this.props.dispatch(DefaultActionCreator.action());
     const { exam_id, student_name } = this.props.match.params;
     const selectedTitle = this.props.location.state;
     const params = {
       exam_id,
       student_name
     };
-    this.props.dispatch(TestCreator.getResult(params));
+    this.props.dispatch(TestCreator.getResult(params)).then(value => {
+      this.props.dispatch(TestCreator.getResultSmall(params)).then(small => {
+        this.props
+          .dispatch(TestCreator.getResultActivity(params))
+          .then(activity => {
+            this.props
+              .dispatch(TestCreator.getResultLevel(params))
+              .then(level => {
+                for (let i = 0; i < small.length; i++) {
+                  small[i].정답률 = Number(small[i].정답률);
+                  small[i].평균 = Number(small[i].평균);
+                }
+                for (let i = 0; i < activity.length; i++) {
+                  activity[i].정답률 = Number(activity[i].정답률);
+                  activity[i].평균 = Number(activity[i].평균);
+                }
+                for (let i = 0; i < level.length; i++) {
+                  level[i].정답률 = Number(level[i].정답률);
+                  level[i].평균 = Number(level[i].평균);
+                }
+                this.setState({
+                  smallData: small,
+                  activityData: activity,
+                  levelData: level
+                });
+              });
+          });
+      });
+    });
   }
 
   render() {
     const { result } = this.props;
+    const { activityData, smallData, levelData } = this.state;
     const halfLength = parseInt(result.length / 2);
     const restLength = result.length - halfLength;
     const { exam_id, student_name } = this.props.match.params;
@@ -93,127 +102,172 @@ class ResultPage extends Component {
 
     return (
       <div className="resultPage">
-        <div
-          className="resultPage__content"
-          ref={el => (this.componentRef = el)}
-        >
-          <h4 className="resultPage__content__title">
-            {selectedTitle + " 결과"}
-          </h4>
-          <div className="resultPage__content__info">
-            <p>
-              {student_name} 학생 / {grade} 학년 / {school} 학교{" "}
-            </p>
+        <div className="resultPage-first">
+          <div style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}>
+            <img src={TheSunLogo} width={150} />
           </div>
-          <div className="resultPage__content__tableArea">
-            <table className="resultPage__content__table">
-              <thead>
-                <tr>
-                  <th>번호</th>
-                  <th>내용영역</th>
-                  <th>행동영역</th>
-                  <th>난이도</th>
-                  <th>채점</th>
-                  <th>정답률</th>
-                </tr>
-              </thead>
-              <tbody>
-                {result &&
-                  result.slice(0, halfLength).map((data, index) => {
-                    return (
-                      <tr
-                        key={index}
-                        className="resultPage__content__table__row"
-                      >
-                        <td>{index + 1}</td>
-                        <td>{data.small}</td>
-                        <td>{data.activity}</td>
-                        <td>{data.level}</td>
-                        <td
-                          className={cx(
-                            "resultPage__content__table__row__right",
-                            {
-                              resultPage__content__table__row__wrong:
-                                data.result === "X"
-                            }
-                          )}
+          <div
+            className="resultPage__content"
+            ref={el => (this.componentRef = el)}
+          >
+            <div className="resultPage__content__info">
+              <p>
+                {student_name && student_name} 학생 / {grade && grade} 학년 /{" "}
+                {school && school} 학교
+              </p>
+            </div>
+            <div className="resultPage__content__tableArea">
+              <table className="resultPage__content__table">
+                <thead>
+                  <tr>
+                    <th>번호</th>
+                    <th>내용영역</th>
+                    <th>행동영역</th>
+                    <th>난이도</th>
+                    <th>채점</th>
+                    <th>정답률</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result &&
+                    result.slice(0, halfLength).map((data, index) => {
+                      return (
+                        <tr
+                          key={index}
+                          className="resultPage__content__table__row"
                         >
-                          {data.result}
-                        </td>
-                        <td>{data.accuracy}%</td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-              <tfoot />
-            </table>
+                          <td>{index + 1}</td>
+                          <td>{data.content}</td>
+                          <td>{data.activity}</td>
+                          <td>{data.level}</td>
+                          <td
+                            className={cx(
+                              "resultPage__content__table__row__right",
+                              {
+                                resultPage__content__table__row__wrong:
+                                  data.result === "X"
+                              }
+                            )}
+                          >
+                            {data.result}
+                          </td>
+                          <td>{data.accuracy}%</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+                <tfoot />
+              </table>
 
-            <table className="resultPage__content__table">
-              <thead>
-                <tr>
-                  <th>번호</th>
-                  <th>내용영역</th>
-                  <th>행동영역</th>
-                  <th>난이도</th>
-                  <th>채점</th>
-                  <th>정답률</th>
-                </tr>
-              </thead>
-              <tbody>
-                {result &&
-                  result.slice(halfLength, result.length).map((data, index) => {
-                    return (
-                      <tr
-                        key={index}
-                        className="resultPage__content__table__row"
-                      >
-                        <td>{index + halfLength + 1}</td>
-                        <td>{data.small}</td>
-                        <td>{data.activity}</td>
-                        <td>{data.level}</td>
-                        <td
-                          className={cx(
-                            "resultPage__content__table__row__right",
-                            {
-                              resultPage__content__table__row__wrong:
-                                data.result === "X"
-                            }
-                          )}
+              <table className="resultPage__content__table">
+                <thead>
+                  <tr>
+                    <th>번호</th>
+                    <th>내용영역</th>
+                    <th>행동영역</th>
+                    <th>난이도</th>
+                    <th>채점</th>
+                    <th>정답률</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result &&
+                    result
+                      .slice(halfLength, result.length)
+                      .map((data, index) => {
+                        return (
+                          <tr
+                            key={index}
+                            className="resultPage__content__table__row"
+                          >
+                            <td>{index + halfLength + 1}</td>
+                            <td>{data.content}</td>
+                            <td>{data.activity}</td>
+                            <td>{data.level}</td>
+                            <td
+                              className={cx(
+                                "resultPage__content__table__row__right",
+                                {
+                                  resultPage__content__table__row__wrong:
+                                    data.result === "X"
+                                }
+                              )}
+                            >
+                              {data.result}
+                            </td>
+                            <td>{data.accuracy}%</td>
+                          </tr>
+                        );
+                      })}
+                </tbody>
+                <tfoot />
+              </table>
+            </div>
+            <br />
+            <br />
+            <br />
+            <p>단원별 분석</p>
+            <div className="resultPage__content__table-small">
+              <table className="resultPage__content__table">
+                <thead>
+                  <tr>
+                    <th>단원명</th>
+                    <th>문항수</th>
+                    <th>정답수</th>
+                    <th>정답률</th>
+                    <th>평균 정답률</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {smallData &&
+                    smallData.map((data, index) => {
+                      return (
+                        <tr
+                          key={index}
+                          className="resultPage__content__table__row"
                         >
-                          {data.result}
-                        </td>
-                        <td>{data.accuracy}%</td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-              <tfoot />
-            </table>
+                          <td>{data.subject}</td>
+                          <td>{data.문항수}</td>
+                          <td>
+                            {Math.ceil((data.정답률 / 100) * data.문항수)}
+                          </td>
+                          <td>{data.정답률}%</td>
+                          <td>{data.평균}%</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+                <tfoot />
+              </table>
+            </div>
           </div>
-          <br />
-          <p>단원별 분석</p>
-          <ComposedChart width={900} height={300} data={data}>
-            <XAxis dataKey="name" tick={{ fontSize: 10 }} interval={0} />
-            <YAxis />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Text width={10} />
-            <Legend />
+        </div>
+        <div className="resultPage-second">
+          <div className="resultPage__content__table-graph">
+            <p style={{ textAlign: "center" }}>단원별 분석(도표)</p>
+            <ComposedChart width={800} height={350} data={this.state.smallData}>
+              <XAxis dataKey="subject" tick={{ fontSize: 10 }} interval={0} />
+              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Legend />
 
-            <Bar
-              type="monotone"
-              dataKey="정답률"
-              fill="#709fb0"
-              label={{ fontSize: 10, color: "#ffffff" }}
-            />
-            <Line
-              type="monotone"
-              dataKey="평균"
-              fill="#ffffff"
-              stroke="#ff7300"
-            />
-          </ComposedChart>
-          <br />
+              <Bar
+                type="monotone"
+                dataKey="정답률"
+                fill="#709fb0"
+                barSize={40}
+                label={{ fontSize: 10, fill: "#ffffff" }}
+              />
+              <Line
+                type="monotone"
+                dataKey="평균"
+                fill="#ffffff"
+                stroke="#ff7300"
+              />
+            </ComposedChart>
+          </div>
+
           <div className="resultPage__content__chart">
             <div className="resultPage__content__chart__active">
               <p>행동영역별 분석</p>
@@ -221,8 +275,8 @@ class ResultPage extends Component {
               <RadarChart
                 outerRadius={90}
                 width={450}
-                height={250}
-                data={data2}
+                height={290}
+                data={this.state.activityData}
               >
                 <PolarGrid />
                 <PolarAngleAxis dataKey="subject" />
@@ -250,8 +304,8 @@ class ResultPage extends Component {
                 <RadarChart
                   outerRadius={90}
                   width={450}
-                  height={250}
-                  data={data3}
+                  height={290}
+                  data={this.state.levelData}
                 >
                   <PolarGrid />
                   <PolarAngleAxis dataKey="subject" />
@@ -276,7 +330,9 @@ class ResultPage extends Component {
               </div>
             </div>
           </div>
-          <button onClick={() => window.print()}>인쇄하기</button>
+          <button className="noprint" onClick={() => window.print()}>
+            인쇄하기
+          </button>
         </div>
       </div>
     );

@@ -48,7 +48,13 @@ const styles = {
     backgroundColor: "#E25F70"
   },
   input: {
+    marginTop: 8,
     marginLeft: 24,
+    marginRight: 25,
+    width: 155
+  },
+  input2: {
+    marginLeft: 35,
     marginRight: 25,
     width: 155
   }
@@ -237,7 +243,13 @@ class TestDetailPage extends Component {
     const activity = this.state.activity[index];
     const level = this.state.level[index];
     const exam_id = test_id;
-    const content = this.state.content[index];
+    let content = "";
+    if (this.state.content[index] === "" || null || undefined) {
+      content = small;
+    } else {
+      content = this.state.content[index];
+    }
+    this.state.content[index];
     const accuracy = this.state.percent[index];
     console.log("문제번호 " + problem_num);
     console.log("대단원: " + big);
@@ -288,7 +300,12 @@ class TestDetailPage extends Component {
     const activity = this.state.activity[index];
     const level = this.state.level[index];
     const exam_id = test_id;
-    const content = this.state.content[index];
+    let content = "";
+    if (this.state.content[index] === "" || null || undefined) {
+      content = small;
+    } else {
+      content = this.state.content[index];
+    }
     const accuracy = this.state.percent[index];
     console.log("문제번호 " + problem_num);
     console.log("대단원: " + big);
@@ -428,6 +445,9 @@ class TestDetailPage extends Component {
                       <span className="testDetailPage__content__label__text">
                         난이도
                       </span>
+                      <span className="testDetailPage__content__label__text">
+                        정확도
+                      </span>
                     </Row>
                     <Row>
                       <DropDownMenu
@@ -509,20 +529,22 @@ class TestDetailPage extends Component {
                             );
                           })}
                       </DropDownMenu>
-                    </Row>
-                    <Row className="testDetailPage__content__input">
-                      <TextField
-                        onChange={e => this.handleContent(e, index)}
-                        hintText="내용영역"
-                        value={this.state.content[index]}
-                        style={styles.input}
-                      />
                       <TextField
                         onChange={e => this.handlePercent(e, index)}
                         hintText="정답률"
                         value={this.state.percent[index]}
                         style={styles.input}
                       />
+                    </Row>
+                    <Row className="testDetailPage__content__input">
+                      <Col sm={{ offset: 2 }}>
+                        <input
+                          onChange={e => this.handleContent(e, index)}
+                          placeholder="내용영역"
+                          value={this.state.content[index]}
+                          style={styles.input2}
+                        />
+                      </Col>
                     </Row>
                     <Snackbar
                       open={this.state.open}

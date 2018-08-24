@@ -13,7 +13,9 @@ import TextField from "material-ui/TextField";
 import ContentAdd from "material-ui/svg-icons/content/add";
 import * as TestCreator from "../../ActionCreators/TestCreator";
 import cx from "classnames";
-import TheSunLogo from "../../Assets/Imgs/thesunlogo_cross.png";
+import TheSunLogo from "../../Assets/Imgs/thesunlogo_down.png";
+import RaisedButton from "material-ui/RaisedButton";
+
 import {
   LineChart,
   BarChart,
@@ -92,6 +94,14 @@ class ResultPage extends Component {
     });
   }
 
+  handleBack = () => {
+    const { exam_id, student_name } = this.props.match.params;
+    const params = { student_name, exam_id };
+    this.props.dispatch(TestCreator.deleteResult(params)).then(value => {
+      this.props.history.goBack();
+    });
+  };
+
   render() {
     const { result } = this.props;
     const { activityData, smallData, levelData } = this.state;
@@ -99,22 +109,71 @@ class ResultPage extends Component {
     const restLength = result.length - halfLength;
     const { exam_id, student_name } = this.props.match.params;
     const { selectedTitle, grade, school } = this.props.location.state;
+    const answerLength = result.filter((data, index) => {
+      return data.result === "O";
+    }).length;
 
     return (
       <div className="resultPage">
         <div className="resultPage-first">
-          <div style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}>
-            <img src={TheSunLogo} width={150} />
-          </div>
           <div
             className="resultPage__content"
             ref={el => (this.componentRef = el)}
           >
+            <div style={{ marginTop: 20, marginBottom: 20, width: "100%" }}>
+              <h3 style={{ textAlign: "center", margin: 10 }}>
+                {selectedTitle}
+              </h3>
+            </div>
             <div className="resultPage__content__info">
-              <p>
-                {student_name && student_name} 학생 / {grade && grade} 학년 /{" "}
-                {school && school} 학교
-              </p>
+              <div
+                style={{
+                  marginBottom: 5,
+                  alignItems: "center",
+                  display: "flex",
+                  flexDirection: "row"
+                }}
+              >
+                <span className="resultPage-icon">
+                  <i className="xi-profile-o" />
+                </span>
+                학생정보
+              </div>
+              <table style={{ width: "100%" }}>
+                <thead style={{ width: "100%" }}>
+                  <tr>
+                    <th>이름</th>
+                    <th>학년</th>
+                    <th>학교</th>
+                    <th>시험종류</th>
+                    <th>정답수/총문항</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{student_name && student_name}</td>
+                    <td>{grade && grade}</td>
+                    <td>{school && school}</td>
+                    <td>입학테스트</td>
+                    <td>{`${answerLength}/${result.length}`}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <br />
+            <div
+              style={{
+                width: "100%",
+                marginBottom: 5,
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "row"
+              }}
+            >
+              <span className="resultPage-icon">
+                <i className="xi-list" />
+              </span>
+              평가내용
             </div>
             <div className="resultPage__content__tableArea">
               <table className="resultPage__content__table">
@@ -158,7 +217,6 @@ class ResultPage extends Component {
                 </tbody>
                 <tfoot />
               </table>
-
               <table className="resultPage__content__table">
                 <thead>
                   <tr>
@@ -203,10 +261,20 @@ class ResultPage extends Component {
                 <tfoot />
               </table>
             </div>
-            <br />
-            <br />
-            <br />
-            <p>단원별 분석</p>
+
+            <div
+              style={{
+                width: "100%",
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "row"
+              }}
+            >
+              <span className="resultPage-icon">
+                <i className="xi-list" />
+              </span>
+              단원별 분석
+            </div>
             <div className="resultPage__content__table-small">
               <table className="resultPage__content__table">
                 <thead>
@@ -229,7 +297,7 @@ class ResultPage extends Component {
                           <td>{data.subject}</td>
                           <td>{data.문항수}</td>
                           <td>
-                            {Math.ceil((data.정답률 / 100) * data.문항수)}
+                            {Math.floor((data.정답률 / 100) * data.문항수)}
                           </td>
                           <td>{data.정답률}%</td>
                           <td>{data.평균}%</td>
@@ -239,99 +307,225 @@ class ResultPage extends Component {
                 </tbody>
                 <tfoot />
               </table>
+              <img src={TheSunLogo} style={{ height: 250, width: "auto" }} />
             </div>
           </div>
         </div>
         <div className="resultPage-second">
-          <div className="resultPage__content__table-graph">
-            <p style={{ textAlign: "center" }}>단원별 분석(도표)</p>
-            <ComposedChart width={800} height={350} data={this.state.smallData}>
-              <XAxis dataKey="subject" tick={{ fontSize: 10 }} interval={0} />
-              <YAxis />
-              <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip />
-              <Legend />
-
-              <Bar
-                type="monotone"
-                dataKey="정답률"
-                fill="#709fb0"
-                barSize={40}
-                label={{ fontSize: 10, fill: "#ffffff" }}
-              />
-              <Line
-                type="monotone"
-                dataKey="평균"
-                fill="#ffffff"
-                stroke="#ff7300"
-              />
-            </ComposedChart>
-          </div>
-
-          <div className="resultPage__content__chart">
-            <div className="resultPage__content__chart__active">
-              <p>행동영역별 분석</p>
-
-              <RadarChart
-                outerRadius={90}
-                width={450}
-                height={290}
-                data={this.state.activityData}
+          <div className="resultPage__content">
+            <div className="resultPage__content__table-graph">
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  marginBottom: 10,
+                  borderTop: "2px solid #037367",
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  borderBottom: "2px solid #037367",
+                  alignItems: "center"
+                }}
               >
-                <PolarGrid />
-                <PolarAngleAxis dataKey="subject" />
-                <PolarRadiusAxis angle={30} tickCount={5} domain={[0, 100]} />
-                <Radar
-                  name="평균"
-                  dataKey="평균"
-                  stroke="#ff7300"
-                  fill="#ff7300"
-                  fillOpacity={0.6}
-                />
-                <Radar
-                  name="정답률"
-                  dataKey="정답률"
-                  stroke="#709fb0"
-                  fill="#709fb0"
-                  fillOpacity={0.6}
-                />
+                <span className="resultPage-icon">
+                  <i className="xi-chart-bar" />
+                </span>
+                도표 분석
+              </div>
+              <br />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginBottom: 10
+                }}
+              >
+                <span className="resultPage-icon">
+                  <i className="xi-list" />
+                </span>
+                단원별 분석
+              </div>
+              <ComposedChart
+                width={800}
+                height={350}
+                data={this.state.smallData}
+              >
+                <XAxis dataKey="subject" tick={{ fontSize: 10 }} interval={0} />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
                 <Legend />
-              </RadarChart>
-            </div>
-            <div>
-              <div className="resultPage__content__chart__level">
-                <p>난이도별 분석</p>
-                <RadarChart
-                  outerRadius={90}
-                  width={450}
-                  height={290}
-                  data={this.state.levelData}
-                >
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="subject" />
-                  <PolarRadiusAxis angle={30} tickCount={5} domain={[0, 100]} />
 
-                  <Radar
-                    name="평균"
-                    dataKey="평균"
-                    stroke="#ff7300"
-                    fill="#ff7300"
-                    fillOpacity={0.6}
-                  />
-                  <Radar
-                    name="정답률"
-                    dataKey="정답률"
-                    stroke="#709fb0"
-                    fill="#709fb0"
-                    fillOpacity={0.6}
-                  />
-                  <Legend />
-                </RadarChart>
+                <Bar
+                  type="monotone"
+                  dataKey="정답률"
+                  fill="#037367"
+                  barSize={40}
+                  label={{ fontSize: 10, fill: "#ffffff" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="평균"
+                  fill="#ffffff"
+                  stroke="#ff7300"
+                />
+              </ComposedChart>
+            </div>
+            <div className="resultPage__content__chart">
+              <div className="resultPage__content__chart__active">
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginBottom: 10
+                  }}
+                >
+                  <span className="resultPage-icon">
+                    <i className="xi-lightbulb-o" />
+                  </span>
+                  행동영역별 분석
+                </div>
+                <div className="resultPage__content__chart__active-border">
+                  <RadarChart
+                    outerRadius={130}
+                    width={500}
+                    height={320}
+                    margin={{ top: 30 }}
+                    data={this.state.activityData}
+                  >
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="subject" />
+                    <PolarRadiusAxis
+                      angle={160}
+                      tickCount={5}
+                      domain={[0, 100]}
+                    />
+                    <Radar
+                      name="평균"
+                      dataKey="평균"
+                      stroke="#ff7300"
+                      fill="#ff7300"
+                      fillOpacity={0.6}
+                    />
+                    <Radar
+                      name="정답률"
+                      dataKey="정답률"
+                      stroke="#037367"
+                      fill="#037367"
+                      fillOpacity={0.6}
+                    />
+                    <Legend />
+                  </RadarChart>
+                </div>
+              </div>
+              <div>
+                <div className="resultPage__content__chart__level">
+                  <div
+                    style={{
+                      alignItems: "center",
+                      display: "flex",
+                      marginBottom: 10,
+                      flexDirection: "row"
+                    }}
+                  >
+                    <span className="resultPage-icon">
+                      <i className="xi-trending-up" />
+                    </span>
+                    난이도별 분석
+                  </div>
+                  <RadarChart
+                    outerRadius={130}
+                    width={500}
+                    height={320}
+                    data={this.state.levelData}
+                    margin={{ top: 30 }}
+                  >
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="subject" />
+                    <PolarRadiusAxis
+                      angle={160}
+                      tickCount={5}
+                      domain={[0, 100]}
+                    />
+
+                    <Radar
+                      name="평균"
+                      dataKey="평균"
+                      stroke="#ff7300"
+                      fill="#ff7300"
+                      fillOpacity={0.6}
+                    />
+                    <Radar
+                      name="정답률"
+                      dataKey="정답률"
+                      stroke="#037367"
+                      fill="#037367"
+                      fillOpacity={0.6}
+                    />
+                    <Legend />
+                  </RadarChart>
+                </div>
               </div>
             </div>
           </div>
+          <br />
+          <br />
+          <br />
+          <div>
+            <p>
+              1)
+              <span className="resultPage__content__chart-number">
+                내용영역
+              </span>
+              은 단원명입니다.
+            </p>
+            <p>
+              2)
+              <span className="resultPage__content__chart-number">채점은 </span>
+              <span style={{ color: "#037367", fontWeight: "700" }}>O</span>/
+              <span style={{ color: "#ff7300", fontWeight: "700" }}>X</span> 로
+              판단하시면 됩니다.
+            </p>
+            <p>
+              3)
+              <span className="resultPage__content__chart-number">정답률</span>
+              은 같은 시험을 치른 학생들 평균입니다.
+            </p>
+            <p>
+              4)
+              <span className="resultPage__content__chart-number">
+                단원별 분석 그래프
+              </span>
+              는{" "}
+              <span style={{ color: "#037367", fontWeight: "700" }}>녹색</span>{" "}
+              막대그래프가 학생 정답률이며{" "}
+              <span style={{ color: "#ff7300", fontWeight: "700" }}>
+                주황색
+              </span>{" "}
+              그래프는 평균 정답률입니다.
+            </p>
+            <p>
+              5)
+              <span className="resultPage__content__chart-number">
+                행동영역별 분석과 난이도 분석 그래프
+              </span>
+              는{" "}
+              <span style={{ color: "#037367", fontWeight: "700" }}>녹색</span>{" "}
+              삼각형이 학생 정답률이며{" "}
+              <span style={{ color: "#ff7300", fontWeight: "700" }}>
+                주황색
+              </span>{" "}
+              삼각형은 평균 정답률입니다.
+            </p>
+          </div>
+
           <button className="noprint" onClick={() => window.print()}>
             인쇄하기
+          </button>
+          <br />
+          <br />
+          <button className="noprint" onClick={this.handleBack}>
+            삭제하고 뒤로 돌아가기
           </button>
         </div>
       </div>

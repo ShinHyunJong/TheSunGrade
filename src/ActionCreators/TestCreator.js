@@ -32,6 +32,9 @@ export const FAILED_TO_GET_RESULT_ACTIVE = "FAILED_TO_GET_RESULT_ACTIVE";
 export const SUCCEED_TO_GET_RESULT_LEVEL = "SUCCEED_TO_GET_RESULT_LEVEL";
 export const FAILED_TO_GET_RESULT_LEVEL = "FAILED_TO_GET_RESULT_LEVEL";
 
+export const SUCCEED_TO_DELETE_TEST = "SUCCEED_TO_DELETE_TEST";
+export const FAILED_TO_DELETE_TEST = "FAILED_TO_DELETE_TEST";
+
 export const getProblem = exam_id => {
   return async dispatch => {
     try {
@@ -144,7 +147,6 @@ export const postTest = (
         })
       });
       let responseJson = await response.json();
-      console.log(responseJson);
       await dispatch({
         type: SUCCEED_TO_POST_TEST,
         payload: responseJson.insert_id
@@ -193,7 +195,6 @@ export const postProblem = (
         })
       });
       let responseJson = await response.json();
-      console.log(responseJson);
       await dispatch({
         type: SUCCEED_TO_POST_PROBLEM,
         payload: responseJson
@@ -242,7 +243,6 @@ export const updateProblem = (
         })
       });
       let responseJson = await response.json();
-      console.log(responseJson);
       await dispatch({
         type: SUCCEED_TO_UPDATE_PROBLEM,
         payload: responseJson
@@ -275,7 +275,6 @@ export const postGrade = params => {
         })
       });
       let responseJson = await response.json();
-      console.log(responseJson);
       await dispatch({
         type: SUCCEED_TO_POST_GRADE,
         payload: responseJson
@@ -307,7 +306,6 @@ export const getResult = params => {
         }
       );
       let responseJson = await response.json();
-      console.log(responseJson);
       await dispatch({
         type: SUCCEED_TO_GET_RESULT,
         payload: responseJson.result
@@ -339,7 +337,6 @@ export const getResultSmall = params => {
         }
       );
       let responseJson = await response.json();
-      console.log(responseJson);
       await dispatch({
         type: SUCCEED_TO_GET_RESULT_SMALL,
         payload: responseJson.final
@@ -371,7 +368,6 @@ export const getResultActivity = params => {
         }
       );
       let responseJson = await response.json();
-      console.log(responseJson);
       await dispatch({
         type: SUCCEED_TO_GET_RESULT_ACTIVE,
         payload: responseJson.final
@@ -403,7 +399,6 @@ export const getResultLevel = params => {
         }
       );
       let responseJson = await response.json();
-      console.log(responseJson);
       await dispatch({
         type: SUCCEED_TO_GET_RESULT_LEVEL,
         payload: responseJson.final
@@ -412,6 +407,63 @@ export const getResultLevel = params => {
     } catch (error) {
       dispatch({
         type: FAILED_TO_GET_RESULT_LEVEL,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const deleteTest = params => {
+  return async dispatch => {
+    try {
+      let response = await fetch(
+        ServerEndPoint + `api/exam/${params.exam_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      let responseJson = await response.json();
+      await dispatch({
+        type: SUCCEED_TO_DELETE_TEST,
+        payload: responseJson
+      });
+      return responseJson;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_DELETE_TEST,
+        payload: { data: "NETWORK_ERROR" }
+      });
+    }
+  };
+};
+
+export const deleteResult = params => {
+  return async dispatch => {
+    try {
+      let response = await fetch(ServerEndPoint + "api/exam/result/delete", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          student_name: params.student_name,
+          exam_id: params.exam_id
+        })
+      });
+      let responseJson = await response.json();
+      await dispatch({
+        type: SUCCEED_TO_DELETE_TEST,
+        payload: responseJson
+      });
+      return responseJson;
+    } catch (error) {
+      dispatch({
+        type: FAILED_TO_DELETE_TEST,
         payload: { data: "NETWORK_ERROR" }
       });
     }

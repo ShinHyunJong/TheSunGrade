@@ -18,9 +18,14 @@
 }
 
 .resultPage {
+  &-icon {
+    margin-right: 5px;
+    font-size: 1.5rem;
+    display: flex;
+  }
   &-first {
     display: flex;
-    height: 297mm;
+    height: 350mm;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -34,7 +39,7 @@
   }
   &-second {
     display: flex;
-    height: 297mm;
+    height: 350mm;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -52,14 +57,24 @@
     padding: 5px;
     background-color: white;
     color: black;
-    border: 1px rgba(0, 0, 0, 0.8) solid;
+    border: 1px rgba(160, 193, 184, 0.8) solid;
+    border-left: none;
+    border-right: none;
+    border-top: 2px #037367 solid;
+    border-bottom: 2px #037367 solid;
     font-weight: bold;
     font-size: 12px;
   }
   td {
     text-align: center;
-    border: 1px rgba(0, 0, 0, 0.8) solid;
-    padding: 7px;
+    border: 1px rgba(160, 193, 184, 0.8) solid;
+    border-left: none;
+    border-right: none;
+    padding-top: 10px;
+    height: 2rem;
+    padding-bottom: 10px;
+    padding-left: 7px;
+    padding-right: 7px;
     font-size: 12px;
   }
   &__content {
@@ -67,6 +82,19 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+
+    &__info {
+      width: 100%;
+
+      & table {
+        width: 100%;
+      }
+
+      th {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+    }
 
     &__title {
       margin: 1rem;
@@ -79,23 +107,43 @@
 
     &__table {
       margin-right: 10px;
+      // border: 2px solid #037367;
+      border: none;
       &:last-child {
         margin-right: 0;
       }
 
       &-small {
         display: flex;
+        width: 100%;
         flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-top: 20px;
+
+        table {
+          width: 50%;
+        }
+        th {
+          padding-top: 5px;
+          padding-bottom: 5px;
+          // padding-left: 1.5rem;
+          // padding-right: 1.5rem;
+        }
       }
       &-graph {
-        padding-bottom: 50px;
+        padding-top: 10px;
+        padding-bottom: 30px;
         display: flex;
+        // border-top: 1px solid rgba(160, 193, 184, 0.8);
+        border-bottom: 1px solid rgba(160, 193, 184, 0.8);
         flex-direction: column;
         align-items: center;
       }
       &__row {
         &__right {
-          color: blue;
+          font-weight: bold;
+          color: #037367;
         }
         &__wrong {
           color: red;
@@ -107,12 +155,23 @@
       display: flex;
       flex-direction: row;
       justify-content: center;
+      margin-top: 30px;
+
+      &-number {
+        font-weight: 700;
+        color: red;
+        margin-left: 5px;
+      }
 
       &__active {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
+
+        &-border {
+          border-right: 0.55px solid rgba(160, 193, 184, 0.8);
+        }
       }
 
       &__level {

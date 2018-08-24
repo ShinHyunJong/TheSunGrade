@@ -3,6 +3,8 @@
 * Email: nayunhwan.dev@mgail.com
 */
 .list {
+  display: flex;
+  flex-direction: row;
   &__content {
     color: $main-color !important;
     &:hover {
@@ -53,6 +55,7 @@
     &__text {
       color: $date-color;
       font-size: 12px;
+      margin-right: 5px;
     }
   }
 }

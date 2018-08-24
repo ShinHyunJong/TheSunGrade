@@ -68,7 +68,7 @@ const styles = {
 
 const styleAdd = {
   position: "absolute",
-  right: 250,
+  right: 200,
   bottom: 100
 };
 
@@ -77,6 +77,7 @@ class TestPage extends Component {
     super(props);
     this.state = {
       open: false,
+      openDelete: false,
       testName: "",
       testCount: 0,
       testWriter: "",
@@ -85,22 +86,34 @@ class TestPage extends Component {
       selectedSemester: 0,
       nameStatus: false,
       countStatus: false,
-      writerStatus: false
+      writerStatus: false,
+      deleteId: 0,
+      tests: []
     };
   }
 
   componentDidMount() {
     this.props.dispatch(ActivityCreator.getActivity());
     this.props.dispatch(LevelCreator.getLevel());
-    this.props.dispatch(TestCreator.getTests());
+    this.props.dispatch(TestCreator.getTests()).then(tests => {
+      this.setState({ tests });
+    });
   }
 
   handleOpen = () => {
     this.setState({ open: true });
   };
 
+  handleOpenDelete = id => {
+    this.setState({ openDelete: true, deleteId: id });
+  };
+
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  handleCloseDelete = () => {
+    this.setState({ openDelete: false });
   };
 
   handleName = e => {
@@ -119,6 +132,22 @@ class TestPage extends Component {
     this.setState({
       selectedSchool: index,
       selectedGrade: 0
+    });
+  };
+
+  handleDelete = () => {
+    const { deleteId } = this.state;
+    const newTest = this.state.tests.slice();
+    const removeIndex = newTest
+      .map((data, index) => {
+        return data.id;
+      })
+      .indexOf(deleteId);
+    newTest.splice(removeIndex, 1);
+    this.setState({ tests: newTest });
+    const params = { exam_id: deleteId };
+    this.props.dispatch(TestCreator.deleteTest(params)).then(value => {
+      this.setState({ openDelete: false });
     });
   };
 
@@ -181,11 +210,21 @@ class TestPage extends Component {
     }
   };
 
+  handleTestDetail = id => {
+    this.props.history.push({
+      pathname: "/test/" + id
+    });
+  };
+
   render() {
     const grade = gradeJson.data;
     const actions = [
       <FlatButton label="취소" onClick={this.handleClose} />,
       <FlatButton label="생성" primary={true} onClick={this.handlePost} />
+    ];
+    const actionDelete = [
+      <FlatButton label="취소" onClick={this.handleCloseDelete} />,
+      <FlatButton label="삭제" primary={true} onClick={this.handleDelete} />
     ];
     return (
       <div className="testPage">
@@ -199,27 +238,30 @@ class TestPage extends Component {
             <Container>
               <Row className="testPage__content">
                 <div>
-                  {this.props.tests &&
-                    this.props.tests
+                  {this.state.tests &&
+                    this.state.tests
                       .filter(tests => {
                         return tests.school === "초등학교";
                       })
                       .map((data, index) => {
                         return (
-                          <Link key={index} to={"/test/" + data.id}>
-                            <List
-                              content={data.title}
-                              current={data.current_count}
-                              count={data.question_num}
-                              date={data.created_at}
-                              next={
-                                <ImageNavigateNext
-                                  style={iconStyles}
-                                  color={green600}
-                                />
-                              }
-                            />
-                          </Link>
+                          <List
+                            key={index}
+                            isDelete
+                            onClick={() => this.handleTestDetail(data.id)}
+                            onDeleteClick={() => this.handleOpenDelete(data.id)}
+                            content={data.title}
+                            current={data.current_count}
+                            count={data.question_num}
+                            writer={data.writer}
+                            date={data.created_at}
+                            next={
+                              <ImageNavigateNext
+                                style={iconStyles}
+                                color={green600}
+                              />
+                            }
+                          />
                         );
                       })}
                 </div>
@@ -231,27 +273,32 @@ class TestPage extends Component {
               <Container>
                 <Row className="testPage__content">
                   <div>
-                    {this.props.tests &&
-                      this.props.tests
+                    {this.state.tests &&
+                      this.state.tests
                         .filter(tests => {
                           return tests.school === "중학교";
                         })
                         .map((data, index) => {
                           return (
-                            <Link key={index} to={"/test/" + data.id}>
-                              <List
-                                content={data.title}
-                                current={data.current_count}
-                                count={data.question_num}
-                                date={data.created_at}
-                                next={
-                                  <ImageNavigateNext
-                                    style={iconStyles}
-                                    color={green600}
-                                  />
-                                }
-                              />
-                            </Link>
+                            <List
+                              isDelete
+                              key={index}
+                              onClick={() => this.handleTestDetail(data.id)}
+                              onDeleteClick={() =>
+                                this.handleOpenDelete(data.id)
+                              }
+                              content={data.title}
+                              current={data.current_count}
+                              writer={data.writer}
+                              count={data.question_num}
+                              date={data.created_at}
+                              next={
+                                <ImageNavigateNext
+                                  style={iconStyles}
+                                  color={green600}
+                                />
+                              }
+                            />
                           );
                         })}
                   </div>
@@ -263,27 +310,30 @@ class TestPage extends Component {
             <Container>
               <Row className="testPage__content">
                 <div>
-                  {this.props.tests &&
-                    this.props.tests
+                  {this.state.tests &&
+                    this.state.tests
                       .filter(tests => {
                         return tests.school === "고등학교";
                       })
                       .map((data, index) => {
                         return (
-                          <Link key={index} to={"/test/" + data.id}>
-                            <List
-                              content={data.title}
-                              current={data.current_count}
-                              count={data.question_num}
-                              date={data.created_at}
-                              next={
-                                <ImageNavigateNext
-                                  style={iconStyles}
-                                  color={green600}
-                                />
-                              }
-                            />
-                          </Link>
+                          <List
+                            isDelete
+                            key={index}
+                            onClick={() => this.handleTestDetail(data.id)}
+                            content={data.title}
+                            current={data.current_count}
+                            count={data.question_num}
+                            writer={data.writer}
+                            date={data.created_at}
+                            onDeleteClick={() => this.handleOpenDelete(data.id)}
+                            next={
+                              <ImageNavigateNext
+                                style={iconStyles}
+                                color={green600}
+                              />
+                            }
+                          />
                         );
                       })}
                 </div>
@@ -291,6 +341,13 @@ class TestPage extends Component {
             </Container>
           </Tab>
         </Tabs>
+        <Dialog
+          className="chooseTest__modal"
+          title="정말 삭제하시겠습니까?"
+          actions={actionDelete}
+          modal={true}
+          open={this.state.openDelete}
+        />
         <Dialog
           className="testPage__modal"
           title="시험지 추가하기"

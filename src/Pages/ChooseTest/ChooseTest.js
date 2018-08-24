@@ -101,8 +101,8 @@ class ChooseTest extends Component {
       open: false,
       selectedId: null,
       selectedTitle: "",
-      selectedType: "0",
-      selectedTypeText: "정답",
+      selectedType: "1",
+      selectedTypeText: "오답",
       selectedNumber: [],
       selectedQnum: 0,
       displayNumber: []
@@ -189,7 +189,6 @@ class ChooseTest extends Component {
       numberString = newArray.join("");
     }
 
-
     const { name, grade, school } = this.props.location.state;
     const { selectedType, selectedId, selectedTitle } = this.state;
 
@@ -236,13 +235,13 @@ class ChooseTest extends Component {
                     style={styles.radioGroup}
                   >
                     <RadioButton
-                      value="0"
-                      label="정답"
+                      value="1"
+                      label="오답"
                       style={styles.radioButton}
                     />
                     <RadioButton
-                      value="1"
-                      label="오답"
+                      value="0"
+                      label="정답"
                       style={styles.radioButton}
                     />
                   </RadioButtonGroup>
@@ -297,13 +296,13 @@ class ChooseTest extends Component {
                       style={styles.radioGroup}
                     >
                       <RadioButton
-                        value="0"
-                        label="정답"
+                        value="1"
+                        label="오답"
                         style={styles.radioButton}
                       />
                       <RadioButton
-                        value="1"
-                        label="오답"
+                        value="0"
+                        label="정답"
                         style={styles.radioButton}
                       />
                     </RadioButtonGroup>
@@ -356,13 +355,13 @@ class ChooseTest extends Component {
                     style={styles.radioGroup}
                   >
                     <RadioButton
-                      value="0"
-                      label="정답"
+                      value="1"
+                      label="오답"
                       style={styles.radioButton}
                     />
                     <RadioButton
-                      value="1"
-                      label="오답"
+                      value="0"
+                      label="정답"
                       style={styles.radioButton}
                     />
                   </RadioButtonGroup>

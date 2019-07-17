@@ -14,7 +14,7 @@ import ContentAdd from "material-ui/svg-icons/content/add";
 import * as DefaultActionCreator from "../../ActionCreators/_DefaultActionCreator";
 import * as ActivityCreator from "../../ActionCreators/ActivityCreator";
 import { ImageNavigateNext, ActionDelete } from "material-ui/svg-icons";
-import { green600, green400 } from "material-ui/styles/colors";
+import { blue900, green400 } from "material-ui/styles/colors";
 
 const defaultProps = {};
 const propTypes = {};
@@ -120,7 +120,7 @@ class ActionPage extends Component {
                   key={index}
                   content={data.name}
                   onClickIcon={() => this.handleDelete(data.name)}
-                  next={<ActionDelete style={iconStyles} color={green600} />}
+                  next={<ActionDelete style={iconStyles} color={blue900} />}
                 />
               );
             })}

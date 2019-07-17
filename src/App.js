@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom"; // Material UI Provider for React
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
-import { green600 } from "material-ui/styles/colors";
+import { blue900 } from "material-ui/styles/colors";
 // Own Modules
 import {
   DefaultPage,
@@ -25,7 +25,7 @@ import {
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: green600
+    primary1Color: blue900
   },
   radioButton: {}
 });

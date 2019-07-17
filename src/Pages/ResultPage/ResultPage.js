@@ -13,7 +13,7 @@ import TextField from "material-ui/TextField";
 import ContentAdd from "material-ui/svg-icons/content/add";
 import * as TestCreator from "../../ActionCreators/TestCreator";
 import cx from "classnames";
-import TheSunLogo from "../../Assets/Imgs/thesunlogo_down.png";
+import SumisaLogo from "../../Assets/Imgs/sumisaLogo.jpeg";
 import RaisedButton from "material-ui/RaisedButton";
 
 import {
@@ -307,7 +307,7 @@ class ResultPage extends Component {
                 </tbody>
                 <tfoot />
               </table>
-              <img src={TheSunLogo} style={{ height: 250, width: "auto" }} />
+              <img src={SumisaLogo} style={{ height: 250, width: "auto" }} />
             </div>
           </div>
         </div>
@@ -320,10 +320,10 @@ class ResultPage extends Component {
                   display: "flex",
                   flexDirection: "row",
                   marginBottom: 10,
-                  borderTop: "2px solid #037367",
+                  borderTop: "2px solid #162d84",
                   paddingTop: 10,
                   paddingBottom: 10,
-                  borderBottom: "2px solid #037367",
+                  borderBottom: "2px solid #162d84",
                   alignItems: "center"
                 }}
               >
@@ -359,7 +359,7 @@ class ResultPage extends Component {
                 <Bar
                   type="monotone"
                   dataKey="정답률"
-                  fill="#037367"
+                  fill="#162d84"
                   barSize={40}
                   label={{ fontSize: 10, fill: "#ffffff" }}
                 />
@@ -410,8 +410,8 @@ class ResultPage extends Component {
                     <Radar
                       name="정답률"
                       dataKey="정답률"
-                      stroke="#037367"
-                      fill="#037367"
+                      stroke="#162d84"
+                      fill="#162d84"
                       fillOpacity={0.6}
                     />
                     <Legend />
@@ -458,8 +458,8 @@ class ResultPage extends Component {
                     <Radar
                       name="정답률"
                       dataKey="정답률"
-                      stroke="#037367"
-                      fill="#037367"
+                      stroke="#162d84"
+                      fill="#162d84"
                       fillOpacity={0.6}
                     />
                     <Legend />
@@ -482,7 +482,7 @@ class ResultPage extends Component {
             <p>
               2)
               <span className="resultPage__content__chart-number">채점은 </span>
-              <span style={{ color: "#037367", fontWeight: "700" }}>O</span>/
+              <span style={{ color: "#162d84", fontWeight: "700" }}>O</span>/
               <span style={{ color: "#ff7300", fontWeight: "700" }}>X</span> 로
               판단하시면 됩니다.
             </p>
@@ -497,7 +497,7 @@ class ResultPage extends Component {
                 단원별 분석 그래프
               </span>
               는{" "}
-              <span style={{ color: "#037367", fontWeight: "700" }}>녹색</span>{" "}
+              <span style={{ color: "#162d84", fontWeight: "700" }}>청색</span>{" "}
               막대그래프가 학생 정답률이며{" "}
               <span style={{ color: "#ff7300", fontWeight: "700" }}>
                 주황색
@@ -510,7 +510,7 @@ class ResultPage extends Component {
                 행동영역별 분석과 난이도 분석 그래프
               </span>
               는{" "}
-              <span style={{ color: "#037367", fontWeight: "700" }}>녹색</span>{" "}
+              <span style={{ color: "#162d84", fontWeight: "700" }}>청색</span>{" "}
               삼각형이 학생 정답률이며{" "}
               <span style={{ color: "#ff7300", fontWeight: "700" }}>
                 주황색

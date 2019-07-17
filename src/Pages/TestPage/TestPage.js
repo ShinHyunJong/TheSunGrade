@@ -14,7 +14,7 @@ import TextField from "material-ui/TextField";
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton";
 import gradeJson from "../../Json/grade";
 import { ImageNavigateNext } from "material-ui/svg-icons";
-import { green600, green400, transparent } from "material-ui/styles/colors";
+import { blue900, green400, transparent } from "material-ui/styles/colors";
 
 import * as DefaultActionCreator from "../../ActionCreators/_DefaultActionCreator";
 import * as ActivityCreator from "../../ActionCreators/ActivityCreator";
@@ -40,7 +40,7 @@ const iconStyles = {
 
 const styles = {
   ink: {
-    backgroundColor: green600
+    backgroundColor: blue900
   },
   block: {
     maxWidth: 250
@@ -62,7 +62,7 @@ const styles = {
     boxShadow: "0 1px 2px rgba(0, 0, 0, 0.075)"
   },
   tabButton: {
-    color: "#5b5e6d"
+    color: "#162d84"
   }
 };
 
@@ -258,7 +258,7 @@ class TestPage extends Component {
                             next={
                               <ImageNavigateNext
                                 style={iconStyles}
-                                color={green600}
+                                color={blue900}
                               />
                             }
                           />
@@ -295,7 +295,7 @@ class TestPage extends Component {
                               next={
                                 <ImageNavigateNext
                                   style={iconStyles}
-                                  color={green600}
+                                  color={blue900}
                                 />
                               }
                             />
@@ -330,7 +330,7 @@ class TestPage extends Component {
                             next={
                               <ImageNavigateNext
                                 style={iconStyles}
-                                color={green600}
+                                color={blue900}
                               />
                             }
                           />

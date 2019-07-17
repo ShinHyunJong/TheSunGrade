@@ -14,7 +14,7 @@ import TextField from "material-ui/TextField";
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton";
 import gradeJson from "../../Json/grade";
 import { ImageNavigateNext } from "material-ui/svg-icons";
-import { green600, green400, transparent } from "material-ui/styles/colors";
+import { green400, transparent, blue900 } from "material-ui/styles/colors";
 import Chip from "material-ui/Chip";
 import * as DefaultActionCreator from "../../ActionCreators/_DefaultActionCreator";
 import * as ActivityCreator from "../../ActionCreators/ActivityCreator";
@@ -40,7 +40,7 @@ const iconStyles = {
 
 const styles = {
   ink: {
-    backgroundColor: green600
+    backgroundColor: blue900
   },
   block: {
     maxWidth: 250
@@ -70,7 +70,7 @@ const styles = {
   },
   chip: {
     margin: 4,
-    backgroundColor: green600
+    backgroundColor: blue900
   },
   chipText: {
     color: "white"
@@ -270,7 +270,7 @@ class ChooseTest extends Component {
                             next={
                               <ImageNavigateNext
                                 style={iconStyles}
-                                color={green600}
+                                color={blue900}
                               />
                             }
                           />
@@ -331,7 +331,7 @@ class ChooseTest extends Component {
                               next={
                                 <ImageNavigateNext
                                   style={iconStyles}
-                                  color={green600}
+                                  color={blue900}
                                 />
                               }
                             />
@@ -390,7 +390,7 @@ class ChooseTest extends Component {
                             next={
                               <ImageNavigateNext
                                 style={iconStyles}
-                                color={green600}
+                                color={blue900}
                               />
                             }
                           />

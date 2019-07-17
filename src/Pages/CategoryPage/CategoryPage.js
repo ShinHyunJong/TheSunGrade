@@ -12,7 +12,7 @@ import ContentAdd from "material-ui/svg-icons/content/add";
 import { Container, Row, Col } from "reactstrap";
 import { Route, Link } from "react-router-dom";
 import { ImageNavigateNext } from "material-ui/svg-icons";
-import { green600, green400 } from "material-ui/styles/colors";
+import { blue900, green400 } from "material-ui/styles/colors";
 
 import * as DefaultActionCreator from "../../ActionCreators/_DefaultActionCreator";
 
@@ -84,13 +84,13 @@ class CategoryPage extends Component {
           <Link to="/category/action" className="link">
             <List
               content="행동 영역"
-              next={<ImageNavigateNext style={iconStyles} color={green600} />}
+              next={<ImageNavigateNext style={iconStyles} color={blue900} />}
             />
           </Link>
           <Link to="/category/level" className="link">
             <List
               content="난이도"
-              next={<ImageNavigateNext style={iconStyles} color={green600} />}
+              next={<ImageNavigateNext style={iconStyles} color={blue900} />}
             />
           </Link>
 
